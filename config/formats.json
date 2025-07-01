@@ -1,0 +1,67 @@
+{
+  "display": {
+    "Comuter/Monitor": {
+      "16:9": {
+        "description": "Widescreen",
+        "resolutions": [
+          { "x": 1280, "y": 720, "description": "1280x720 (HD/720p)" },
+          { "x": 1600, "y": 900, "description": "1600x900 (HD+)" },
+          { "x": 1920, "y": 1080, "description": "1920x1080 (Full HD/ 1080p)" },
+          { "x": 2450, "y": 1440, "description": "2450x1440 (QHD/2K)" },
+          { "x": 3200, "y": 1800, "description": "3200x1800 (QHD+)" },
+          { "x": 3840, "y": 2160, "description": "3840x2160 (4K UHD)" },
+          { "x": 5120, "y": 2880, "description": "5120x2880 (5K)" },
+          { "x": 7680, "y": 4320, "description": "7680x4320 (8K)" }
+        ]
+      },
+      "16:10": {
+        "description": "Older Widescreen",
+        "resolutions": [
+          { "x": 1280, "y": 800, "description": "1280x800 (WXGA)" },
+          { "x": 1440, "y": 900, "description": "1440x900 (WXGA+)" },
+          { "x": 1680, "y": 1050, "description": "1680x1050 (WSXGA+)" },
+          { "x": 1920, "y": 1200, "description": "1920x1200 (WUXGA)" },
+          { "x": 2560, "y": 1600, "description": "2560x1600 (WQXGA)" },
+          { "x": 3840, "y": 2400, "description": "2560x1600 (WQUXGA)" }
+        ]
+      },
+      "4:3": {
+        "description": "Standard/Legacy",
+        "resolutions": [
+          { "x": 640, "y": 480, "description": "640x480 (VGA)" },
+          { "x": 800, "y": 600, "description": "800x600 (SVGA)" },
+          { "x": 1024, "y": 768, "description": "1024x768 (XGA)" },
+          { "x": 1400, "y": 1050, "description": "1400x1050 (SXGA+)" },
+          { "x": 1600, "y": 1200, "description": "1600x1200 (UXGA)" },
+          { "x": 2048, "y": 1536, "description": "2048x1536 (QXGA)" },
+          { "x": 2560, "y": 1920, "description": "2560x1920" },
+          { "x": 4096, "y": 3072, "description": "4096x3072" }
+        ]
+      },
+      "21:9": {
+        "description": "Ultrawide"
+      }
+    },
+    "Mobile Devices": {},
+    "Video & Media": {},
+    "Social Media": {
+      "1:1": {
+        "description": "Square",
+        "resolutions": [
+          { "x": 512, "y": 512, "description": "512x512" },
+          { "x": 720, "y": 720, "description": "720x720" },
+          {
+            "x": 1080,
+            "y": 1080,
+            "description": "1080x1080 (instagram standard)"
+          },
+          { "x": 1440, "y": 1440, "description": "1440x1440" },
+          { "x": 2048, "y": 2048, "description": "2048x2048" },
+          { "x": 3000, "y": 3000, "description": "3000x3000" },
+          { "x": 4000, "y": 4000, "description": "4000x4000" },
+          { "x": 5000, "y": 5000, "description": "5000x5000" }
+        ]
+      }
+    }
+  }
+}
