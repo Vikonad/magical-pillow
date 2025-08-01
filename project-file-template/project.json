@@ -1,0 +1,10 @@
+{
+  "project-info": {
+    "version": 0.01,
+    "name": "vikonad-project",
+    "date": "31/7/2025"
+  },
+  "layers": {
+    "layer-1": "layers/image1.jpg"
+  }
+}

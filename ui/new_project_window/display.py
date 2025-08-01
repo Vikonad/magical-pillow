@@ -88,7 +88,7 @@ class Display(QWidget):
         for tp in self.data:
             #print(tp)
             for ar in self.data[tp]:
-                print(ar)
+                #print(ar)
                 self.aspect_ratio_box.addItem(
                     ar + ' (' + self.data[tp][ar]["description"] + ')', ar
                 )

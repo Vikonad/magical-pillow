@@ -1,29 +1,56 @@
-from PySide6.QtWidgets import QMainWindow, QSplitter, QWidget, QTabWidget
+from PySide6.QtWidgets import QMainWindow, QSplitter, QVBoxLayout, QWidget, QTabWidget
 from PySide6.QtGui import QAction
 from PySide6.QtCore import Qt
 
-from ui import PenSettings, LayerWidget
+from ui import PenSettings, LayersWidget, HistoryWidget, ToolboxWidget, ImageViewer
 
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Magical Pillow [DEBUG]")
-        self.setMinimumSize(800, 600)
+        #self.setMinimumSize(1120, 720)
 
         layout = QSplitter(Qt.Horizontal)
         self.setCentralWidget(layout)
 
-        self.left_widget = PenSettings()
+        self.left_widget = QTabWidget()
         self.left_widget.setMinimumWidth(250)
+        self.left_widget.setMaximumWidth(250)
+        self.toolbox_layout = QSplitter(Qt.Vertical)
+        self.toolbox_layout.setObjectName("mainWindow")  # Give it a name
+        self.toolbox_layout.setStyleSheet("""
+            QSplitter#mainWindow {
+                background-color: rgb(30,30,30);
+            }
+        """)
+        self.toolbox_layout.setContentsMargins(0,0,0,0)
+        self.toolbox = ToolboxWidget()
+        self.toolbox_layout.addWidget(self.toolbox)
+        self.pen_settings = PenSettings()
+        self.toolbox_layout.addWidget(self.pen_settings)
+
+        self.left_widget.addTab(self.toolbox_layout, "tools")
+        self.left_widget.addTab(QWidget(), "AI")
+
         layout.addWidget(self.left_widget)
 
-        layout.addWidget(QTabWidget())
+        project_tabs = QTabWidget()
+        layout.addWidget(project_tabs)
 
-        self.right_widget = LayerWidget()
+        preview = ImageViewer()
+
+        project_tabs.addTab(preview, "preview")
+
+        self.right_widget = QTabWidget()
         layout.addWidget(self.right_widget)
-        self.right_widget.setMinimumWidth(250)
+        self.right_widget.setMinimumWidth(400)
+        self.right_widget.setMaximumWidth(400)
 
-        layout.setSizes([150, 500, 150])
+        self.layer_widget = LayersWidget()
+        self.right_widget.addTab(self.layer_widget, "Layers")
+        self.history_widget = HistoryWidget()
+        self.right_widget.addTab(self.history_widget, "History")
+
 
         menu_bar = self.menuBar()
 

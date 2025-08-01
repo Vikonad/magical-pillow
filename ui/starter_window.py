@@ -6,7 +6,7 @@ class StarterWindow(QWidget):
 
     def __init__(self):
         super().__init__()
-        self.setWindowTitle("Vikonad's Magical Pillow: Essentials")
+        self.setWindowTitle("Vikonad's Magical Pillow")
         self.setMinimumSize(400, 300)
         self._init_ui()
 

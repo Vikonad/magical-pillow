@@ -9,23 +9,26 @@ class PenSettings(QWidget):
     def __init__(self, parent=None):
         super().__init__(parent)
         self._pen = QPen()
-        layout = QVBoxLayout(self)
-
+        layout = QVBoxLayout()
+        self.title = QLabel("Drawing")
+        self.title.setStyleSheet('font-size: 20px; font-weight: bold;')
+        layout.addWidget(self.title)
         # Color
         color_layout = QHBoxLayout()
         color_layout.addWidget(QLabel("Color:"))
         self.color_button = QPushButton()
         self.color_button.pressed.connect(self.choose_color)
         color_layout.addWidget(self.color_button)
+        layout.addLayout(color_layout)
 
         # Opacity
+        opacity_layout = QHBoxLayout()
+        opacity_layout.addWidget(QLabel("Opacity:"))
         self.alpha_spin = QSpinBox()
         self.alpha_spin.setRange(0, 255)
         self.alpha_spin.setValue(self._pen.color().alpha())
-        color_layout.addWidget(QLabel("Opacity:"))
-        color_layout.addWidget(self.alpha_spin)
-
-        layout.addLayout(color_layout)
+        opacity_layout.addWidget(self.alpha_spin)
+        layout.addLayout(opacity_layout)
 
         # Width
         width_layout = QHBoxLayout()
@@ -111,7 +114,9 @@ class PenSettings(QWidget):
         self.cosmetic_checkbox = QCheckBox("Cosmetic Pen (1px regardless of zoom)")
         layout.addWidget(self.cosmetic_checkbox)
 
+
         layout.addStretch()
+        self.setLayout(layout)
 
     def choose_color(self):
         color = QColorDialog.getColor(self._pen.color(), self)
