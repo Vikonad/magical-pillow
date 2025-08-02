@@ -7,15 +7,17 @@ class StarterWindow(QWidget):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Vikonad's Magical Pillow")
-        self.setMinimumSize(400, 300)
+        self.setFixedSize(400,350)
         self._init_ui()
 
     def _init_ui(self):
         layout = QVBoxLayout()
 
-        title = QLabel("Magical Pillow Essentials")
-        title.setStyleSheet("font-size: 24px; font-weight: bold;")
+        title = QLabel("Magical Pillow")
+        title.setStyleSheet("font-size: 26px; font-weight: bold;")
         title.setAlignment(Qt.AlignCenter)
+        title2 = QLabel("Yet another image editing software")
+        title2.setAlignment(Qt.AlignCenter)
 
         new_btn = QPushButton("New Project")
         open_btn = QPushButton("Open Project")
@@ -24,6 +26,7 @@ class StarterWindow(QWidget):
         open_btn.clicked.connect(lambda: self.signal.emit("open"))
 
         layout.addWidget(title)
+        layout.addWidget(title2)
         layout.addStretch()
         layout.addWidget(new_btn)
         layout.addWidget(open_btn)

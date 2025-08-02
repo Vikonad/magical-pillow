@@ -26,8 +26,6 @@ class ToolboxWidget(QWidget):
             buttons_layout = QHBoxLayout()
             for j in i:
                 button = QPushButton(j[0])
-                print(len(i))
-                print(j)
                 if len(i) > 1:
                     buttons_layout.addWidget(button)
                     layout.addLayout(buttons_layout)
