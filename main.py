@@ -22,9 +22,6 @@ def main():
     def open_editor(mode: str):
         if mode == "new":
             new_project.show()
-            #window.showMaximized()
-            #window.new_file()
-            #starter.close()
 
         elif mode == "open":
             file_path, _ = QFileDialog.getOpenFileName(
