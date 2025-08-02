@@ -21,10 +21,10 @@ def main():
 
     def open_editor(mode: str):
         if mode == "new":
-            window.showMaximized()
             new_project.show()
+            #window.showMaximized()
             #window.new_file()
-            starter.close()
+            #starter.close()
 
         elif mode == "open":
             file_path, _ = QFileDialog.getOpenFileName(
@@ -34,6 +34,12 @@ def main():
                 window.showMaximized()
                 starter.close()
 
+    def open_main_window():
+        window.showMaximized()
+        starter.close()
+        new_project.close()
+
+    new_project.create_project.connect(open_main_window)
     starter.signal.connect(open_editor)
 
     starter.show()

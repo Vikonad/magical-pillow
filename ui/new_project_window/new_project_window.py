@@ -7,7 +7,7 @@ from .photography import Photography
 from .printing import Printing
 
 class NewProjectWindow(QWidget):
-    create_project = Signal(dict)  # Send project info as a dict
+    create_project = Signal(dict)  # Send project info as a QImage
 
     def __init__(self):
         super().__init__()
