@@ -2,7 +2,7 @@ from PySide6.QtWidgets import QMainWindow, QSplitter, QVBoxLayout, QWidget, QTab
 from PySide6.QtGui import QAction
 from PySide6.QtCore import Qt
 
-from ui import PenSettings, LayersWidget, HistoryWidget, ToolboxWidget, ImageViewer
+from ui import PenSettings, LayersWidget, HistoryWidget, ToolboxWidget, ImageViewer, TextSettings
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -25,8 +25,9 @@ class MainWindow(QMainWindow):
         """)
         self.toolbox_layout.setContentsMargins(0,0,0,0)
         self.toolbox = ToolboxWidget()
+        self.toolbox.signal.connect(print)
         self.toolbox_layout.addWidget(self.toolbox)
-        self.pen_settings = PenSettings()
+        self.pen_settings = TextSettings()
         self.toolbox_layout.addWidget(self.pen_settings)
 
         self.left_widget.addTab(self.toolbox_layout, "tools")

@@ -2,13 +2,15 @@ from PySide6.QtWidgets import (
     QGridLayout,
     QApplication, QMainWindow, QPushButton, QSlider, QTextEdit, QDockWidget, QLabel, QListWidget, QVBoxLayout, QWidget, QHBoxLayout, QFrame, QListWidgetItem
 )
-from PySide6.QtCore import Qt
+from PySide6.QtCore import Qt, Signal
 from PySide6.QtGui import QImage
 from ui import CircleCanvas
 
 from random import randrange
 
 class ToolboxWidget(QWidget):
+    signal = Signal(str)
+
     def __init__(self):
         super().__init__()
         #self.setFixedWidth(100)
@@ -26,6 +28,7 @@ class ToolboxWidget(QWidget):
             buttons_layout = QHBoxLayout()
             for j in i:
                 button = QPushButton(j[0])
+                button.clicked.connect(lambda checked=False, i=j[0]:self.signal.emit(i))
                 if len(i) > 1:
                     buttons_layout.addWidget(button)
                     layout.addLayout(buttons_layout)

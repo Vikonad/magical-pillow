@@ -5,12 +5,6 @@ class SignalBus(QObject):
     _instance = None
     _initialized = False
 
-    project_manager_update = Signal(str)
-    menu_update = Signal(str)
-    project_update = Signal(int)
-    layer_widget = Signal(int)
-    pen_settings = Signal(QPen)
-
     def __new__(cls, *args, **kwargs):
         if cls._instance is None:
             cls._instance = super(SignalBus, cls).__new__(cls)
