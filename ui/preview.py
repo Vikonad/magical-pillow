@@ -5,11 +5,11 @@ from PySide6.QtCore import Qt, QPointF
 class ImageViewer(QWidget):
     def __init__(self):
         super().__init__()
-        self.layers = [QImage(300, 300, QImage.Format.Format_RGB32)]
+        self.layers = [QImage("image_samples/20231016_070401.jpg").convertToFormat(QImage.Format_ARGB32),QImage("image_samples/20231016_070401.jpg").convertToFormat(QImage.Format_ARGB32)]
         self.layers[0].fill(QColor("white"))
         self.pen = QPen(QColor(0,0,0,255), 10, Qt.SolidLine, Qt.RoundCap, Qt.RoundJoin)
-        self.choosenlayer = 0
-        #self.setStyleSheet("background-color: white;")
+        self.choosenlayer = 1
+        self.setStyleSheet("background-color: white;")
         self.drawing_mode = True
         self.drawing = False
         self.eraser_mode = False

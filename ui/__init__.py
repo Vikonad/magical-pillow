@@ -1,5 +1,7 @@
 from .tools.pen_settings import PenSettings
 from .tools.text_settings import TextSettings
+from .tools.filters import Filters
+from .tools.effects import Effects
 from .preview import ImageViewer
 from .history_map import CircleCanvas
 from .layer_widget import LayersWidget

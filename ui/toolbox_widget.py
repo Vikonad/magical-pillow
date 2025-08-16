@@ -9,7 +9,7 @@ from ui import CircleCanvas
 from random import randrange
 
 class ToolboxWidget(QWidget):
-    signal = Signal(str)
+    signal = Signal(list)
 
     def __init__(self):
         super().__init__()
@@ -17,8 +17,8 @@ class ToolboxWidget(QWidget):
         layout = QVBoxLayout()
 
         options = [
-            [["drawing"],["text"]],
-            [["filters"],["effects"]],
+            [["drawing", "bottom_left_layout"],["text", "bottom_middle_widget"]],
+            [["filters", "bottom_left_layout"],["effects", "bottom_left_layout"]],
             [["analysis"],["utility"]],
             [["animations"]],
             [["colors manipulation"]],
@@ -28,7 +28,9 @@ class ToolboxWidget(QWidget):
             buttons_layout = QHBoxLayout()
             for j in i:
                 button = QPushButton(j[0])
-                button.clicked.connect(lambda checked=False, i=j[0]:self.signal.emit(i))
+                button.setCheckable(True)
+                button.toggled.connect(lambda checked, n=j: self.signal.emit([not(checked), n]))
+                #button.clicked.connect(lambda checked=False, i=j[1]:self.signal.emit(i))
                 if len(i) > 1:
                     buttons_layout.addWidget(button)
                     layout.addLayout(buttons_layout)
@@ -49,7 +51,7 @@ class ToolboxWidget(QWidget):
         #analysis = QPushButton("Analysis and Utilities")
         #layout.addWidget(analysis)
 
-        layout.addStretch()
+        #layout.addStretch()
 
 
         self.setLayout(layout)
