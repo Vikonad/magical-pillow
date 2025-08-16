@@ -58,8 +58,6 @@ class MainWindow(QMainWindow):
                 background-color: rgb(30,30,30);
             }
         """)
-        #self.tab_widgets["bottom_left_layout"].addTab(Filters(),"Filters")
-        #self.tab_widgets["bottom_left_layout"].addTab(QWidget(),"Effects")
         self.toolbox_layout.addWidget(self.tab_widgets["bottom_left_layout"])
 
         self.tab_widgets["left_widget"].addTab(self.toolbox_widget, "tools")
