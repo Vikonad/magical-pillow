@@ -56,9 +56,10 @@ class NewProjectWindow(QWidget):
             "image":self.create_image(project_data["resolution"]),
             "resolution":project_data["resolution"]
         })
-        self.close()
+        self.create_project.emit({})
 
     def create_image(self,resolution):
         x, y = resolution
         image = QImage(x, y, QImage.Format_ARGB32)
+        image.fill(QColor("white"))
         return image

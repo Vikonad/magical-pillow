@@ -94,6 +94,7 @@ class Display(QWidget):
                 )
         self.current_aspect_ratio = self.aspect_ratio_box.itemData(self.aspect_ratio_box.currentIndex())
         self.aspect_ratio_box.currentTextChanged.connect(self.on_aspect_ratio_changed)
+        self.resolution_box.currentTextChanged.connect(self.on_resolution_box_changed)
         self.resolution_template()
 
     def resolution_template(self):
@@ -118,3 +119,6 @@ class Display(QWidget):
             ).split(":")
         )
         self.resolution_template()
+
+    def on_resolution_box_changed(self):
+        self.current_resolution = self.resolution_box.itemData(self.resolution_box.currentIndex())

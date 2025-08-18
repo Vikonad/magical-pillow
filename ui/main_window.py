@@ -126,18 +126,17 @@ class MainWindow(QMainWindow):
         help_menu = menu_bar.addMenu("Help")
 
     def hide_tab(self, tab, tab_widget):
-        print("hide")
         if self.tab_widgets[tab_widget].indexOf(self.widgets[tab]) != -1:
             self.tab_widgets[tab_widget].removeTab(self.tab_widgets[tab_widget].indexOf(self.widgets[tab]))
+        self.bus.hide_tab.emit(tab)
 
     def show_tab(self, tab, tab_widget):
-        print("show")
         if self.tab_widgets[tab_widget].indexOf(self.widgets[tab]) == -1:
             self.tab_widgets[tab_widget].addTab(self.widgets[tab], tab)
             self.tab_widgets[tab_widget].setCurrentIndex(
                 self.tab_widgets[tab_widget].indexOf(self.widgets[tab])
             )
+        self.bus.show_tab.emit(tab)
 
     def show_project(self,project):
-        print(project["name"])
         self.project_tabs.addTab(project["widget"], project["name"])

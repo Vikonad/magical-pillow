@@ -28,12 +28,11 @@ class ProjectManager():
         project.add_layer(project_data["image"])
         self.projects.append(project)
         project.show_project()
-        print(self.projects)
 
 class Project():
     def __init__(self, name):
-        self.preview = ImageViewer()
         self.layers = []
+        self.preview = ImageViewer(self.layers)
         self.name = name
         self.resolution = [0,0]
         self.bus = SignalBus()
@@ -49,3 +48,4 @@ class Project():
 
     def add_layer(self, image):
         self.layers.append(image)
+        #self.preview.update_layers(self.layers)

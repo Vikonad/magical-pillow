@@ -7,6 +7,8 @@ class SignalBus(QObject):
 
     new_project = Signal(dict)
     addTab_project = Signal(dict)
+    show_tab = Signal(str)
+    hide_tab = Signal(str)
 
     def __new__(cls, *args, **kwargs):
         if cls._instance is None:
