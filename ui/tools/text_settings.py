@@ -10,7 +10,6 @@ class TextSettings(QWidget):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Rich Text Editor")
-
         self.text_edit = QTextEdit()
         self.text_edit.setPlaceholderText("Type something...")
 
@@ -65,7 +64,6 @@ class TextSettings(QWidget):
         self.bgcolor_btn = QPushButton("BG Color")
         self.bgcolor_btn.clicked.connect(self.change_bg_color)
         self.toolbar.addWidget(self.bgcolor_btn)
-
 
     def merge_format_on_selection(self, format: QTextCharFormat):
         cursor = self.text_edit.textCursor()

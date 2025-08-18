@@ -6,9 +6,13 @@ from ui import PenSettings, LayersWidget, HistoryWidget, ToolboxWidget, ImageVie
 from ui.tools.filters import Filters
 from ui.tools.effects import Effects
 
+from core import SignalBus
+
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
+        self.bus = SignalBus()
+        self.bus.addTab_project.connect(self.show_project)
         self.setWindowTitle("Magical Pillow [DEBUG]")
         #self.setMinimumSize(1120, 720)
 
@@ -72,15 +76,11 @@ class MainWindow(QMainWindow):
 
         self.tab_widgets["bottom_middle_widget"] = QTabWidget()
         self.tab_widgets["bottom_middle_widget"].addTab(QWidget(), "Animation")
-        project_tabs = QTabWidget()
-        self.middle_layout.addWidget(project_tabs)
+        self.project_tabs = QTabWidget()
+        self.middle_layout.addWidget(self.project_tabs)
         self.middle_layout.addWidget(self.tab_widgets["bottom_middle_widget"])
 
         layout.addWidget(self.middle_layout)
-
-        preview = ImageViewer()
-
-        project_tabs.addTab(preview, "preview")
 
         # right widget
         self.right_widget = QTabWidget()
@@ -129,10 +129,6 @@ class MainWindow(QMainWindow):
         print("hide")
         if self.tab_widgets[tab_widget].indexOf(self.widgets[tab]) != -1:
             self.tab_widgets[tab_widget].removeTab(self.tab_widgets[tab_widget].indexOf(self.widgets[tab]))
-        #if index == 0:
-            #    tabindex = self.bottom_left_layout.indexOf(self.pensetting)
-            #    if tabindex != -1:
-                #        self.bottom_left_layout.removeTab(index)
 
     def show_tab(self, tab, tab_widget):
         print("show")
@@ -141,5 +137,7 @@ class MainWindow(QMainWindow):
             self.tab_widgets[tab_widget].setCurrentIndex(
                 self.tab_widgets[tab_widget].indexOf(self.widgets[tab])
             )
-       # if self.bottom_left_layout.indexOf() == -1:
-       #        self.bottom_left_layout.addTab(stored_tab, "Tab 2")
+
+    def show_project(self,project):
+        print(project["name"])
+        self.project_tabs.addTab(project["widget"], project["name"])

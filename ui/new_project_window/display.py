@@ -13,7 +13,7 @@ class Display(QWidget):
 
         self.data = open_file()["display"]
 
-        self.current_aspect_ratio = ""
+        self.current_aspect_ratio = "16:9"
         self.current_resolution = ""
 
         self._init_ui()
@@ -98,11 +98,17 @@ class Display(QWidget):
 
     def resolution_template(self):
         self.resolution_box.clear()
-        for e in self.data["Comuter/Monitor"][self.current_aspect_ratio]["resolutions"]:
-            self.resolution_box.addItem(
-                e["description"],[e["x"],e["y"]]
-            )
-        self.current_resolution = self.resolution_box.itemData(self.resolution_box.currentIndex())
+        all_aspect_ratios = []
+        #for i in self.data.values():
+        #    if self.current_aspect_ratio in i.keys():
+            #        print(i[self.current_aspect_ratio]["resolutions"])
+        for i in self.data.values():
+            if self.current_aspect_ratio in i.keys():
+                for e in i[self.current_aspect_ratio]["resolutions"]:
+                    self.resolution_box.addItem(
+                        e["description"],[e["x"],e["y"]]
+                    )
+                    self.current_resolution = self.resolution_box.itemData(self.resolution_box.currentIndex())
 
     def on_aspect_ratio_changed(self):
         self.current_aspect_ratio = self.aspect_ratio_box.itemData(self.aspect_ratio_box.currentIndex())

@@ -5,8 +5,8 @@ from PySide6.QtCore import Qt
 class AspectRatioCanvas(QWidget):
     def __init__(self):
         super().__init__()
-        self.aspect_ratio = 1 / 1
-        self.aspect_ratio_text = "1:1"
+        self.aspect_ratio = 16 / 9
+        self.aspect_ratio_text = "16:9"
 
     def paintEvent(self, event):
         painter = QPainter(self)

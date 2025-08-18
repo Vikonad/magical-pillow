@@ -39,7 +39,17 @@
         ]
       },
       "21:9": {
-        "description": "Ultrawide"
+        "description": "Ultrawide",
+        "resolutions": [
+          { "x": 2560, "y": 1080, "description": "2560x1080 (UW-FHD)" },
+          { "x": 3440, "y": 1440, "description": "3440x1440 (UW-QHD)" },
+          { "x": 3840, "y": 1600, "description": "3840x1600" },
+          { "x": 5120, "y": 2160, "description": "5120x2160 (5K UW)" }
+        ]
+      },
+      "3:2": {
+        "description": "Traditional Photography",
+        "resolutions": []
       }
     },
     "Mobile Devices": {},

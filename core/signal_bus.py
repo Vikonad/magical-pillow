@@ -5,6 +5,9 @@ class SignalBus(QObject):
     _instance = None
     _initialized = False
 
+    new_project = Signal(dict)
+    addTab_project = Signal(dict)
+
     def __new__(cls, *args, **kwargs):
         if cls._instance is None:
             cls._instance = super(SignalBus, cls).__new__(cls)
