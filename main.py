@@ -15,8 +15,8 @@ def load_theme(app):
 def main():
     project_manager = ProjectManager()
     app = QApplication(sys.argv)
-    app.setWindowIcon(QIcon("icon.png"))  # or .ico on Windows
-    #load_theme(app)
+    app.setWindowIcon(QIcon("icon.png"))
+    load_theme(app)
     starter = StarterWindow()
     new_project = NewProjectWindow()
     window = MainWindow()

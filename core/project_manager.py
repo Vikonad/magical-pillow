@@ -48,4 +48,3 @@ class Project():
 
     def add_layer(self, image):
         self.layers.append(image)
-        #self.preview.update_layers(self.layers)

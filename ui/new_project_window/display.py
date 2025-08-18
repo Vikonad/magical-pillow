@@ -7,7 +7,7 @@ from .open_format_file import open_file
 from .aspect_ratio_display import AspectRatioCanvas
 
 class Display(QWidget):
-    create_project = Signal(dict)  # Send project info as a dict
+    create_project = Signal(dict)
     def __init__(self):
         super().__init__()
 
@@ -86,9 +86,7 @@ class Display(QWidget):
 
     def aspect_ratio_template(self):
         for tp in self.data:
-            #print(tp)
             for ar in self.data[tp]:
-                #print(ar)
                 self.aspect_ratio_box.addItem(
                     ar + ' (' + self.data[tp][ar]["description"] + ')', ar
                 )
@@ -100,9 +98,6 @@ class Display(QWidget):
     def resolution_template(self):
         self.resolution_box.clear()
         all_aspect_ratios = []
-        #for i in self.data.values():
-        #    if self.current_aspect_ratio in i.keys():
-            #        print(i[self.current_aspect_ratio]["resolutions"])
         for i in self.data.values():
             if self.current_aspect_ratio in i.keys():
                 for e in i[self.current_aspect_ratio]["resolutions"]:
