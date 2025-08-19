@@ -13,7 +13,7 @@ class ImageViewer(QWidget):
         self.bus.hide_tab.connect(self.on_hide_drawing_tab)
         self.layers = layers
         self.pen = QPen(QColor(0,0,0,255), 10, Qt.SolidLine, Qt.RoundCap, Qt.RoundJoin)
-        self.choosenlayer = 0
+        self.choosenlayer = 1
         self.setStyleSheet("background-color: white;")
         self.drawing_mode = False
         self.drawing = False
@@ -35,12 +35,12 @@ class ImageViewer(QWidget):
     def on_show_drawing_tab(self, tab):
         if tab == "drawing":
             self.drawing_mode = True
-        for i in self.theline:
-            painter = QPainter(self.layers[self.choosenlayer])
-            painter.setCompositionMode(QPainter.CompositionMode_SourceOver)
-            painter.setPen(self.pen)
-            painter.drawLine(i[0][0], i[0][1], i[1][0], i[1][1])
-            self.update()
+        #for i in self.theline:
+            #    painter = QPainter(self.layers[self.choosenlayer])
+            #    painter.setCompositionMode(QPainter.CompositionMode_SourceOver)
+            #    painter.setPen(self.pen)
+            #    painter.drawLine(i[0][0], i[0][1], i[1][0], i[1][1])
+            #    self.update()
 
     def on_hide_drawing_tab(self, tab):
         print(tab)
@@ -58,7 +58,7 @@ class ImageViewer(QWidget):
         painter.translate(self.offset)
         painter.scale(self.scale, self.scale)
         for layer in self.layers:
-            painter.drawImage(0, 0, layer)
+            painter.drawImage(0, 0, layer.image)
 
     def mousePressEvent(self, event: QMouseEvent):
         if event.button() == Qt.MiddleButton:
@@ -77,7 +77,7 @@ class ImageViewer(QWidget):
     def mouseMoveEvent(self, event: QMouseEvent):
         if self.drawing and self.drawing_mode:
             current_point = self._screen_to_image(event.position())
-            painter = QPainter(self.layers[self.choosenlayer])
+            painter = QPainter(self.layers[self.choosenlayer].image)
             painter.setCompositionMode(QPainter.CompositionMode_SourceOver)
             painter.setPen(self.pen)
             painter.drawLine(self.last_point, current_point)
@@ -86,7 +86,7 @@ class ImageViewer(QWidget):
             self.update()
         elif self.eraser_mode and self.drawing_mode:
             current_point = self._screen_to_image(event.position())
-            painter = QPainter(self.layers[self.choosenlayer])
+            painter = QPainter(self.layers[self.choosenlayer].image)
             painter.setCompositionMode(QPainter.CompositionMode_Clear)
             painter.setPen(QPen(Qt.transparent, 10, Qt.SolidLine, Qt.RoundCap, Qt.RoundJoin))
             painter.drawLine(self.last_point, current_point)

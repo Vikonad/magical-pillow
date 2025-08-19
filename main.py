@@ -1,10 +1,10 @@
-import sys
+import sys, os
 
 from PySide6.QtWidgets import QApplication, QFileDialog
 from PySide6.QtCore import Signal, Qt
 from PySide6.QtGui import QIcon
 
-from core import ProjectManager
+from core import ProjectManager, SignalBus
 from ui import MainWindow, StarterWindow
 from ui.new_project_window.new_project_window import NewProjectWindow
 
@@ -14,6 +14,7 @@ def load_theme(app):
 
 def main():
     project_manager = ProjectManager()
+    bus = SignalBus()
     app = QApplication(sys.argv)
     app.setWindowIcon(QIcon("icon.png"))
     #load_theme(app)
@@ -30,8 +31,11 @@ def main():
                 starter, "Open Project", "", "Images (*.png *.jpg *.jpeg *.bmp *.gif)"
             )
             if file_path:
-                window.showMaximized()
-                starter.close()
+                file_format = os.path.splitext(file_path)[1].lower().lstrip(".")
+                if file_format in ["png", "jpg"]:
+                    bus.open_image.emit(file_path)
+                    window.showMaximized()
+                    starter.close()
 
     def open_main_window():
         window.showMaximized()

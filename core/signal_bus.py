@@ -6,6 +6,8 @@ class SignalBus(QObject):
     _initialized = False
 
     new_project = Signal(dict)
+    open_image = Signal(str)
+    added_layer = Signal(list)
     addTab_project = Signal(dict)
     show_tab = Signal(str)
     hide_tab = Signal(str)
