@@ -1,14 +1,15 @@
 from PySide6.QtWidgets import QWidget, QVBoxLayout, QPushButton, QLabel
 from PySide6.QtCore import Signal, Qt
 
-class StarterWindow(QWidget):
-    signal = Signal(str)
+from core import SignalBus
 
+class StarterWindow(QWidget):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Vikonad's Magical Pillow")
         self.setFixedSize(400,350)
         self._init_ui()
+        self.bus = SignalBus()
 
     def _init_ui(self):
         layout = QVBoxLayout()
@@ -22,8 +23,8 @@ class StarterWindow(QWidget):
         new_btn = QPushButton("New Project")
         open_btn = QPushButton("Open Project")
 
-        new_btn.clicked.connect(lambda: self.signal.emit("new"))
-        open_btn.clicked.connect(lambda: self.signal.emit("open"))
+        new_btn.clicked.connect(lambda: self.bus.open_image_request.emit("new"))
+        open_btn.clicked.connect(lambda: self.bus.open_image_request.emit("open"))
 
         layout.addWidget(title)
         layout.addWidget(title2)

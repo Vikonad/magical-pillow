@@ -77,6 +77,10 @@ class MainWindow(QMainWindow):
         self.tab_widgets["bottom_middle_widget"] = QTabWidget()
         self.tab_widgets["bottom_middle_widget"].addTab(QWidget(), "Animation")
         self.project_tabs = QTabWidget()
+        self.project_tabs.setTabsClosable(True)
+        self.project_tabs.setMovable(True)
+        self.project_tabs.currentChanged.connect(self.on_tab_changed)
+        self.project_tabs.tabCloseRequested.connect(self.close_tab)
         self.middle_layout.addWidget(self.project_tabs)
         self.middle_layout.addWidget(self.tab_widgets["bottom_middle_widget"])
 
@@ -103,8 +107,13 @@ class MainWindow(QMainWindow):
 
         # Add actions to File Menu
         new_action = QAction("New", self)
+        new_action.triggered.connect(lambda: self.bus.open_image_request.emit("new"))
+
+        open_action = QAction("Open", self)
+        open_action.triggered.connect(lambda: self.bus.open_image_request.emit("open"))
         #new_action.triggered.connect(print)
         file_menu.addAction(new_action)
+        file_menu.addAction(open_action)
 
         exit_action = QAction("Exit", self)
         exit_action.triggered.connect(self.close)
@@ -121,7 +130,6 @@ class MainWindow(QMainWindow):
         help_menu = menu_bar.addMenu("Help")
 
         about_action = QAction("About", self)
-        #about_action.triggered.connect(self.show_about)
         help_menu.addAction(about_action)
         help_menu = menu_bar.addMenu("Help")
 
@@ -140,3 +148,13 @@ class MainWindow(QMainWindow):
 
     def show_project(self,project):
         self.project_tabs.addTab(project["widget"], project["name"])
+        self.project_tabs.setCurrentWidget(project["widget"])
+
+    def close_tab(self, index):
+        #self.bus.remove_project.emit("")
+        self.project_tabs.removeTab(index)
+
+    def on_tab_changed(self, index):
+        if index != -1:
+            self.bus.project_tab_switched.emit(self.project_tabs.tabText(index))
+            print(self.project_tabs.tabText(index))

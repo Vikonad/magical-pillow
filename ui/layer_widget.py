@@ -10,7 +10,7 @@ class LayersWidget(QWidget):
     def __init__(self):
         super().__init__()
         self.bus = SignalBus()
-        self.bus.added_layer.connect(self.update_layers)
+        self.bus.layers_update_from_core.connect(self.update_layers)
         layout = QVBoxLayout()
         self.title = QLabel("Layers")
         self.title.setStyleSheet('font-size: 20px; font-weight: bold;')
@@ -19,32 +19,9 @@ class LayersWidget(QWidget):
 
         self.list = QListWidget()
         self.list.setDragDropMode(QListWidget.InternalMove)
-
-        #image_list = [
-        #    "image_samples/20231016_070401.jpg",
-        #    "image_samples/20231022_104751.jpg",
-        #    "image_samples/20231026_071043.jpg",
-        #    "image_samples/20231110_124316.jpg",
-        #    "image_samples/20231110_124334.jpg",
-        #    "image_samples/20231110_124351.jpg",
-        #    "image_samples/20231110_124741.jpg",
-        #    "image_samples/20231110_124754.jpg",
-        #    "image_samples/20231110_124834.jpg",
-        #    "image_samples/20231110_124840.jpg",
-        #    "image_samples/20231110_125114.jpg",
-        #    "image_samples/20231110_125145.jpg",
-        #    "image_samples/20231110_125244.jpg",
-        #    "image_samples/20231110_125308.jpg",
-        #    "image_samples/20231110_125330.jpg",
-        #    "image_samples/20231110_125336.jpg",
-        #    "image_samples/20231110_125342.jpg",
-        #    "image_samples/20231110_125436.jpg",
-        #    "image_samples/20231110_125457.jpg",
-        #    "image_samples/20231026_071043.jpg",
-        #    "image_samples/20231026_071043.jpg"
-        #]
-
-        self.list.setCurrentRow(0)  # Selects the second item (index starts at 0)
+        self.list.model().rowsMoved.connect(self._emit_create)
+        self.list.itemClicked.connect(self._emit_create)
+        self.list.setCurrentRow(0)
         bottom_buttons = QVBoxLayout()
         buttons1 = QHBoxLayout()
         up_button = QPushButton()
@@ -66,15 +43,25 @@ class LayersWidget(QWidget):
 
         self.setLayout(layout)
 
+    #def on_tab_switched(self, tab):
+
+
+    def _emit_create(self):
+        layers = [self.list.item(i).text() for i in range(self.list.count())][::-1]
+        selected = self.list.currentItem().text()
+        self.bus.layers_update_from_ui.emit([layers, selected])
+
     def update_layers(self, layers_list):
+        self.list.clear()
         for layer in layers_list[::-1]:
             widget = LayerWidget(layer.image, layer.name)
             widget.setContentsMargins(0, 0, 0, 0)
 
-            item = QListWidgetItem()
+            item = QListWidgetItem(layer.name)
             item.setSizeHint(widget.sizeHint())
             self.list.addItem(item)
             self.list.setItemWidget(item, widget)
+        self.list.setCurrentRow(0)
 
 class LayerWidget(QWidget):
     def __init__(self, image, title):

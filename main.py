@@ -43,7 +43,7 @@ def main():
         new_project.close()
 
     new_project.create_project.connect(open_main_window)
-    starter.signal.connect(open_editor)
+    bus.open_image_request.connect(open_editor)
 
     starter.show()
 
