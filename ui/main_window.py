@@ -47,11 +47,11 @@ class MainWindow(QMainWindow):
         """)
         self.toolbox_layout.setContentsMargins(0,0,0,0)
         self.toolbox = ToolboxWidget()
-        self.toolbox.signal.connect(
+        self.bus.toolbox_update.connect(
             lambda checked:
-                self.hide_tab(
+                self.show_tab(
                     checked[1][0], checked[1][1]
-                ) if checked[0] else self.show_tab(
+                ) if checked[0] else self.hide_tab(
                     checked[1][0], checked[1][1]
             )
         )

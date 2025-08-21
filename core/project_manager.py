@@ -24,10 +24,15 @@ class ProjectManager():
         self.bus.open_image.connect(self.open_image)
         self.bus.layers_update_from_ui.connect(self.on_layer_update)
         self.bus.project_tab_switched.connect(self.on_tab_switched)
+        self.bus.toolbox_update.connect(self.on_toolbox_update)
+
+    def on_toolbox_update(self, conf):
+        self.projects[self.current_project].ui_configuration[conf[1][0]] = conf[0]
 
     def on_tab_switched(self, tab):
         self.current_project = tab
         self.bus.layers_update_from_core.emit(self.projects[self.current_project].layers)
+        self.bus.update_ui_configuration.emit(self.projects[self.current_project].ui_configuration)
 
     def on_layer_update(self, new_order):
         self.projects[self.current_project].update_layers(new_order)
@@ -53,6 +58,12 @@ class ProjectManager():
 class Project():
     def __init__(self, name):
         self.layers = []
+        self.ui_configuration = {
+            "drawing": False,
+            "text": False,
+            "filters": False,
+            "effects": False
+        }
         self.preview = ImageViewer(self.layers)
         self.name = name
         self.resolution = {}

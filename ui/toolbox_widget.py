@@ -4,19 +4,20 @@ from PySide6.QtWidgets import (
 )
 from PySide6.QtCore import Qt, Signal
 from PySide6.QtGui import QImage
+from core import SignalBus
 from ui import CircleCanvas
 
 from random import randrange
 
 class ToolboxWidget(QWidget):
-    signal = Signal(list)
-
     def __init__(self):
         super().__init__()
         #self.setFixedWidth(100)
+        self.bus = SignalBus()
+        self.bus.update_ui_configuration.connect(self.update_ui_configuration)
         layout = QVBoxLayout()
 
-        options = [
+        self.options = [
             [["drawing", "bottom_left_layout"],["text", "bottom_middle_widget"]],
             [["filters", "bottom_left_layout"],["effects", "bottom_left_layout"]],
             [["analysis"],["utility"]],
@@ -24,34 +25,23 @@ class ToolboxWidget(QWidget):
             [["colors manipulation"]],
             [["transformations"]],
         ]
-        for i in options:
+        for i in self.options:
             buttons_layout = QHBoxLayout()
             for j in i:
                 button = QPushButton(j[0])
                 button.setCheckable(True)
-                button.toggled.connect(lambda checked, n=j: self.signal.emit([not(checked), n]))
+                button.toggled.connect(lambda checked, n=j: self.bus.toolbox_update.emit([checked, n]))
+                #print(j)
                 #button.clicked.connect(lambda checked=False, i=j[1]:self.signal.emit(i))
                 if len(i) > 1:
                     buttons_layout.addWidget(button)
                     layout.addLayout(buttons_layout)
                 else: layout.addWidget(button)
 
-
-
-        #drawing = QPushButton("Drawing and Text")
-        #layout.addWidget(drawing)
-        #filters = QPushButton("Filters and Effects")
-        #layout.addWidget(filters)
-        #colorman = QPushButton("Color Manipulation")
-        #layout.addWidget(colorman)
-        #transformations = QPushButton("Transformations and Geometry")
-        #layout.addWidget(transformations)
-        #animation = QPushButton("GIFs and Animation")
-        #layout.addWidget(animation)
-        #analysis = QPushButton("Analysis and Utilities")
-        #layout.addWidget(analysis)
-
-        #layout.addStretch()
-
-
         self.setLayout(layout)
+
+    def update_ui_configuration(self, configuration):
+        self.bus.toolbox_update.emit([configuration["drawing"],self.options[0][0]])
+        self.bus.toolbox_update.emit([configuration["text"],self.options[0][1]])
+        self.bus.toolbox_update.emit([configuration["filters"],self.options[1][0]])
+        self.bus.toolbox_update.emit([configuration["effects"],self.options[1][1]])
