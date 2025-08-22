@@ -48,8 +48,7 @@ class ProjectManager():
     def open_image(self, image_path):
         name = image_path.split("/")[-1].split(".")[0]
         project = Project(name)
-        for i in range(10):
-            project.add_layer(QImage(image_path).convertToFormat(QImage.Format_ARGB32), f"layer {i}")
+        project.add_layer(QImage(image_path).convertToFormat(QImage.Format_ARGB32), f"layer 1")
         self.projects[name] = project
         self.current_project = name
         project.show_project()

@@ -16,6 +16,7 @@ class SignalBus(QObject):
     project_tab_switched = Signal(str)
     update_ui_configuration = Signal(dict)
     toolbox_update = Signal(list)
+    pen_update = Signal(QPen)
 
     def __new__(cls, *args, **kwargs):
         if cls._instance is None:

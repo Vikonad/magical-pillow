@@ -157,4 +157,3 @@ class MainWindow(QMainWindow):
     def on_tab_changed(self, index):
         if index != -1:
             self.bus.project_tab_switched.emit(self.project_tabs.tabText(index))
-            print(self.project_tabs.tabText(index))

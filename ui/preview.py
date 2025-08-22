@@ -1,5 +1,5 @@
 from PySide6.QtWidgets import QWidget
-from PySide6.QtGui import QImage, QPainter, QPen, QColor, QMouseEvent, QWheelEvent
+from PySide6.QtGui import QImage, QPainter, QPen, QColor, QMouseEvent, QWheelEvent, QPainterPath
 from PySide6.QtCore import Qt, QPointF
 import sys
 
@@ -9,6 +9,7 @@ class ImageViewer(QWidget):
     def __init__(self, layers):
         super().__init__()
         self.bus = SignalBus()
+        self.bus.pen_update.connect(self.on_pen_update)
         self.bus.show_tab.connect(self.on_show_drawing_tab)
         self.bus.hide_tab.connect(self.on_hide_drawing_tab)
         self.layers = layers
@@ -19,6 +20,7 @@ class ImageViewer(QWidget):
         self.drawing = False
         self.eraser_mode = False
         self.last_point = None
+
 
         #zooming
         self.scale = 0.5
@@ -32,6 +34,9 @@ class ImageViewer(QWidget):
     #def update_layers(self,layers):
     #    self.layers = layers
     #    self.update()
+    def on_pen_update(self, pen):
+        self.pen = pen
+
     def on_show_drawing_tab(self, tab):
         if tab == "drawing":
             self.drawing_mode = True
@@ -43,7 +48,6 @@ class ImageViewer(QWidget):
             #    self.update()
 
     def on_hide_drawing_tab(self, tab):
-        print(tab)
         if tab == "drawing":
             self.drawing_mode = False
 
@@ -75,20 +79,27 @@ class ImageViewer(QWidget):
             self.last_point = self._screen_to_image(event.position())
 
     def mouseMoveEvent(self, event: QMouseEvent):
+        # At the start of a stroke (mouse press)
+        self.temp_image = QImage(self.layers[self.choosenlayer].image.size(),
+                                 QImage.Format_ARGB32_Premultiplied)
+        self.temp_image.fill(Qt.transparent)
+
+        # During drawing (mouse move)
         if self.drawing and self.drawing_mode:
             current_point = self._screen_to_image(event.position())
-            painter = QPainter(self.layers[self.choosenlayer].image)
-            painter.setCompositionMode(QPainter.CompositionMode_SourceOver)
-            painter.setPen(self.pen)
+            painter = QPainter(self.temp_image)
+            painter.setRenderHint(QPainter.Antialiasing, True)
+            pen = QPen(self.pen)   # copy of your pen
+            pen.setColor(pen.color().toRgb())  # force full alpha
+            painter.setPen(pen)
             painter.drawLine(self.last_point, current_point)
-            self.theline.append([[self.last_point.x(), self.last_point.y()], [current_point.x(), current_point.y()]])
             self.last_point = current_point
             self.update()
         elif self.eraser_mode and self.drawing_mode:
             current_point = self._screen_to_image(event.position())
             painter = QPainter(self.layers[self.choosenlayer].image)
             painter.setCompositionMode(QPainter.CompositionMode_Clear)
-            painter.setPen(QPen(Qt.transparent, 10, Qt.SolidLine, Qt.RoundCap, Qt.RoundJoin))
+            painter.setPen(self.pen)
             painter.drawLine(self.last_point, current_point)
             self.last_point = current_point
             self.update()
@@ -97,6 +108,12 @@ class ImageViewer(QWidget):
             self.offset += delta
             self.last_pan_point = event.position()
             self.update()
+
+        # On stroke finish (mouse release)
+        painter = QPainter(self.layers[self.choosenlayer].image)
+        painter.setRenderHint(QPainter.Antialiasing, True)
+        painter.setOpacity(self.pen.color().alphaF())  # apply pen opacity here
+        painter.drawImage(0, 0, self.temp_image)
 
     def mouseReleaseEvent(self, event: QMouseEvent):
         if event.button() == Qt.LeftButton:
