@@ -36,6 +36,7 @@ class LayersWidget(QWidget):
         bottom_buttons.addLayout(buttons1)
 
         self.add_new_layer = QPushButton("Add new layer")
+        self.add_new_layer.pressed.connect(lambda: self.bus.add_layer.emit("add_layer"))
         bottom_buttons.addWidget(self.add_new_layer)
 
         layout.addWidget(self.list)

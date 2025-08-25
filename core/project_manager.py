@@ -1,5 +1,5 @@
 from PySide6.QtCore import QObject, Signal
-from PySide6.QtGui import QColor, QPen, QImage
+from PySide6.QtGui import QColor, QPen, QImage, Qt
 from core import SignalBus
 from ui.preview import ImageViewer
 
@@ -25,6 +25,13 @@ class ProjectManager():
         self.bus.layers_update_from_ui.connect(self.on_layer_update)
         self.bus.project_tab_switched.connect(self.on_tab_switched)
         self.bus.toolbox_update.connect(self.on_toolbox_update)
+        self.bus.add_layer.connect(self.add_layer_to_project)
+        self.bus.close_project.connect(self.close_project)
+
+    def close_project(self, project):
+        item = self.projects.pop(project, None)
+        if len(self.projects) == 0:
+            self.bus.layers_update_from_core.emit([])
 
     def on_toolbox_update(self, conf):
         self.projects[self.current_project].ui_configuration[conf[1][0]] = conf[0]
@@ -48,10 +55,17 @@ class ProjectManager():
     def open_image(self, image_path):
         name = image_path.split("/")[-1].split(".")[0]
         project = Project(name)
-        project.add_layer(QImage(image_path).convertToFormat(QImage.Format_ARGB32), f"layer 1")
+        project.add_layer(QImage(image_path).convertToFormat(QImage.Format_ARGB32), "layer 1")
         self.projects[name] = project
         self.current_project = name
         project.show_project()
+
+    def add_layer_to_project(self):
+        image_resolution = self.projects[self.current_project].resolution
+        image = QImage(image_resolution["x"], image_resolution["y"], QImage.Format_ARGB32)
+        name = f"Layer {len(self.projects[self.current_project].layers)}"
+        image.fill(Qt.transparent)
+        self.projects[self.current_project].add_layer(image, name)
 
 
 class Project():
@@ -93,6 +107,7 @@ class Project():
         self.layers.append(layer)
         self.bus.layers_update_from_core.emit(self.layers)
         self.preview.choosenlayer = len(self.layers)-1
+        self.preview.update()
 
     def add_canvas(self):
         canvas = QImage(self.resolution["x"],self.resolution["y"] , QImage.Format_ARGB32)

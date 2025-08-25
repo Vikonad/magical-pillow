@@ -152,6 +152,7 @@ class MainWindow(QMainWindow):
 
     def close_tab(self, index):
         #self.bus.remove_project.emit("")
+        self.bus.close_project.emit(self.project_tabs.tabText(index))
         self.project_tabs.removeTab(index)
 
     def on_tab_changed(self, index):

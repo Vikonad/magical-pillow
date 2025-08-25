@@ -10,6 +10,7 @@ class SignalBus(QObject):
     open_image = Signal(str)
     layers_update_from_core = Signal(list)
     layers_update_from_ui = Signal(list)
+    add_layer = Signal(str)
     addTab_project = Signal(dict)
     show_tab = Signal(str)
     hide_tab = Signal(str)
@@ -17,6 +18,7 @@ class SignalBus(QObject):
     update_ui_configuration = Signal(dict)
     toolbox_update = Signal(list)
     pen_update = Signal(QPen)
+    close_project = Signal(str)
 
     def __new__(cls, *args, **kwargs):
         if cls._instance is None:
