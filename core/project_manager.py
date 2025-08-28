@@ -34,7 +34,8 @@ class ProjectManager():
             self.bus.layers_update_from_core.emit([])
 
     def on_toolbox_update(self, conf):
-        self.projects[self.current_project].ui_configuration[conf[1][0]] = conf[0]
+        if len(self.projects) >= 1:
+            self.projects[self.current_project].ui_configuration[conf[1][0]] = conf[0]
 
     def on_tab_switched(self, tab):
         self.current_project = tab
@@ -61,11 +62,12 @@ class ProjectManager():
         project.show_project()
 
     def add_layer_to_project(self):
-        image_resolution = self.projects[self.current_project].resolution
-        image = QImage(image_resolution["x"], image_resolution["y"], QImage.Format_ARGB32)
-        name = f"Layer {len(self.projects[self.current_project].layers)}"
-        image.fill(Qt.transparent)
-        self.projects[self.current_project].add_layer(image, name)
+        if len(self.projects) >= 1:
+            image_resolution = self.projects[self.current_project].resolution
+            image = QImage(image_resolution["x"], image_resolution["y"], QImage.Format_ARGB32)
+            name = f"Layer {len(self.projects[self.current_project].layers)}"
+            image.fill(Qt.transparent)
+            self.projects[self.current_project].add_layer(image, name)
 
 
 class Project():
