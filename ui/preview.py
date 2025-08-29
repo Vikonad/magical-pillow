@@ -1,7 +1,9 @@
 from PySide6.QtWidgets import QWidget
 from PySide6.QtGui import QImage, QPainter, QPen, QColor, QMouseEvent, QWheelEvent, QPainterPath
 from PySide6.QtCore import Qt, QPointF
+
 import sys
+from datetime import datetime
 
 from core import SignalBus
 
@@ -83,6 +85,7 @@ class ImageViewer(QWidget):
             painter.setCompositionMode(QPainter.CompositionMode_SourceOver)
             painter.setPen(self.pen)
             painter.drawLine(self.last_point, current_point)
+            self.theline.append([[self.last_point.x(), self.last_point.y()],[current_point.x(),current_point.y()]])
             self.last_point = current_point
             self.update()
         elif self.eraser_mode and self.drawing_mode:
@@ -91,6 +94,7 @@ class ImageViewer(QWidget):
             painter.setCompositionMode(QPainter.CompositionMode_Clear)
             painter.setPen(self.pen)
             painter.drawLine(self.last_point, current_point)
+            self.theline.append([[self.last_point.x(), self.last_point.y()],[current_point.x(),current_point.y()]])
             self.last_point = current_point
             self.update()
         elif self.panning:
@@ -100,10 +104,32 @@ class ImageViewer(QWidget):
             self.update()
 
     def mouseReleaseEvent(self, event: QMouseEvent):
+        now = datetime.now()
         if event.button() == Qt.LeftButton:
             self.drawing = False
+            if self.drawing_mode: self.bus.send_history.emit({
+                "title":"draw",
+                "parameters": {
+                    "pen": self.pen,
+                    "line": self.theline
+                },
+                "date": now.strftime("%H:%M"),
+                "layer": self.layers[self.choosenlayer].name
+            })
+        if event.button() == Qt.RightButton:
+            self.eraser_mode = False
+            if self.drawing_mode: self.bus.send_history.emit({
+                "title":"erase",
+                "parameters": {
+                    "pen": self.pen,
+                    "line": self.theline
+                },
+                "date": now.strftime("%H:%M"),
+                "layer": self.layers[self.choosenlayer].name
+            })
         if event.button() == Qt.MiddleButton:
             self.panning = False
+        self.theline = []
 
     def wheelEvent(self, event: QWheelEvent):
         old_mouse_img_pos = self._screen_to_image(event.position())

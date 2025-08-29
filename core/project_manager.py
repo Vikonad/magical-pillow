@@ -3,6 +3,8 @@ from PySide6.QtGui import QColor, QPen, QImage, Qt
 from core import SignalBus
 from ui.preview import ImageViewer
 
+from datetime import datetime
+
 class ProjectManager():
     _instance = None
     _initialized = False
@@ -27,6 +29,10 @@ class ProjectManager():
         self.bus.toolbox_update.connect(self.on_toolbox_update)
         self.bus.add_layer.connect(self.add_layer_to_project)
         self.bus.close_project.connect(self.close_project)
+        self.bus.send_history.connect(self.send_history)
+
+    def send_history(self, history):
+        self.projects[self.current_project].add_history(history)
 
     def close_project(self, project):
         item = self.projects.pop(project, None)
@@ -69,9 +75,13 @@ class ProjectManager():
             image.fill(Qt.transparent)
             self.projects[self.current_project].add_layer(image, name)
 
-
 class Project():
     def __init__(self, name):
+        self.bus = SignalBus()
+
+        self.branches = {"master": []}
+        self.choosenbranch = "master"
+
         self.layers = []
         self.ui_configuration = {
             "drawing": False,
@@ -82,7 +92,10 @@ class Project():
         self.preview = ImageViewer(self.layers)
         self.name = name
         self.resolution = {}
-        self.bus = SignalBus()
+
+    def add_history(self, history):
+        self.branches[self.choosenbranch].append(history)
+        self.bus.update_history.emit(history)
 
     def update_layers(self, new_order):
         self.layers[:] = sorted(self.layers, key=lambda layer: new_order[0].index(layer.name))
@@ -102,6 +115,7 @@ class Project():
         })
 
     def add_layer(self, image, name):
+        now = datetime.now()
         layer = Layer(name, image)
         if len(self.layers) == 0:
             self.set_resolution(image.width(), image.height())
@@ -109,13 +123,32 @@ class Project():
         self.layers.append(layer)
         self.bus.layers_update_from_core.emit(self.layers)
         self.preview.choosenlayer = len(self.layers)-1
+        self.add_history({
+            "title": "add layer",
+            "parameters": {
+                "image": image,
+                "name": name
+            },
+            "date": now.strftime("%H:%M"),
+            "layer": name
+        })
         self.preview.update()
 
     def add_canvas(self):
+        now = datetime.now()
         canvas = QImage(self.resolution["x"],self.resolution["y"] , QImage.Format_ARGB32)
         canvas.fill(QColor("white"))
         layer = Layer("canavs", canvas)
         self.layers.append(layer)
+        self.add_history({
+            "title": "add canvas",
+            "parameters": {
+                "image": canvas,
+                "name": "canvas"
+            },
+            "date": now.strftime("%H:%M"),
+            "layer": "canvas"
+        })
 
 class Layer():
     def __init__(self, name, image):

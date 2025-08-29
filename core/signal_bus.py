@@ -20,6 +20,9 @@ class SignalBus(QObject):
     pen_update = Signal(QPen)
     close_project = Signal(str)
 
+    send_history = Signal(dict)
+    update_history = Signal(dict)
+
     def __new__(cls, *args, **kwargs):
         if cls._instance is None:
             cls._instance = super(SignalBus, cls).__new__(cls)
