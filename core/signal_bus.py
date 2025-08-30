@@ -14,11 +14,11 @@ class SignalBus(QObject):
     addTab_project = Signal(dict)
     show_tab = Signal(str)
     hide_tab = Signal(str)
-    project_tab_switched = Signal(str)
+    project_tab_switched = Signal(int)
     update_ui_configuration = Signal(dict)
     toolbox_update = Signal(list)
     pen_update = Signal(QPen)
-    close_project = Signal(str)
+    close_project = Signal(int)
 
     send_history = Signal(dict)
     update_history = Signal(dict)

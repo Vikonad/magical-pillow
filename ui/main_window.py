@@ -12,6 +12,7 @@ class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
         self.bus = SignalBus()
+        self.projects = []
         self.bus.addTab_project.connect(self.show_project)
         self.setWindowTitle("Magical Pillow [DEBUG]")
         #self.setMinimumSize(1120, 720)
@@ -147,14 +148,15 @@ class MainWindow(QMainWindow):
         self.bus.show_tab.emit(tab)
 
     def show_project(self,project):
+        print(project["id"])
+        project["widget"].setProperty("project_id", project["id"])
         self.project_tabs.addTab(project["widget"], project["name"])
         self.project_tabs.setCurrentWidget(project["widget"])
 
     def close_tab(self, index):
-        #self.bus.remove_project.emit("")
-        self.bus.close_project.emit(self.project_tabs.tabText(index))
+        self.bus.close_project.emit(self.project_tabs.widget(index).property("project_id"))
         self.project_tabs.removeTab(index)
 
     def on_tab_changed(self, index):
         if index != -1:
-            self.bus.project_tab_switched.emit(self.project_tabs.tabText(index))
+            self.bus.project_tab_switched.emit(self.project_tabs.widget(index).property("project_id"))

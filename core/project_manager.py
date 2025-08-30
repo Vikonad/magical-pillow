@@ -2,7 +2,6 @@ from PySide6.QtCore import QObject, Signal
 from PySide6.QtGui import QColor, QPen, QImage, Qt
 from core import SignalBus
 from ui.preview import ImageViewer
-
 from datetime import datetime
 
 class ProjectManager():
@@ -15,6 +14,7 @@ class ProjectManager():
         return cls._instance
 
     def __init__(self):
+        self._next_id = 1
         self.bus = SignalBus()
         if not self._initialized:
             super().__init__()
@@ -52,20 +52,22 @@ class ProjectManager():
         self.projects[self.current_project].update_layers(new_order)
 
     def create_new_project(self, project_data):
-        project = Project(name = project_data["name"])
+        project = Project(project_data["name"], self._next_id)
         project.set_resolution(project_data["resolution"][0],project_data["resolution"][1])
         project.add_layer(project_data["image"], "layer 1")
-        self.projects[project_data["name"]] = project
-        self.current_project = project_data["name"]
+        self.projects[project.id] = project
+        self.current_project = project.id
         project.show_project()
+        self._next_id += 1
 
     def open_image(self, image_path):
         name = image_path.split("/")[-1].split(".")[0]
-        project = Project(name)
+        project = Project(name, self._next_id)
         project.add_layer(QImage(image_path).convertToFormat(QImage.Format_ARGB32), "layer 1")
-        self.projects[name] = project
-        self.current_project = name
+        self.projects[project.id] = project
+        self.current_project = project.id
         project.show_project()
+        self._next_id += 1
 
     def add_layer_to_project(self):
         if len(self.projects) >= 1:
@@ -76,9 +78,9 @@ class ProjectManager():
             self.projects[self.current_project].add_layer(image, name)
 
 class Project():
-    def __init__(self, name):
+    def __init__(self, name, id):
         self.bus = SignalBus()
-
+        self.id = id
         self.branches = {"master": []}
         self.choosenbranch = "master"
 
@@ -111,7 +113,8 @@ class Project():
     def show_project(self):
         self.bus.addTab_project.emit({
             "name": self.name,
-            "widget": self.preview
+            "widget": self.preview,
+            "id": self.id
         })
 
     def add_layer(self, image, name):
