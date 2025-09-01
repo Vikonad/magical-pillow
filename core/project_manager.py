@@ -30,6 +30,10 @@ class ProjectManager():
         self.bus.add_layer.connect(self.add_layer_to_project)
         self.bus.close_project.connect(self.close_project)
         self.bus.send_history.connect(self.send_history)
+        self.bus.delete_layer.connect(self.delete_layer)
+
+    def delete_layer(self, layer_id):
+        self.projects[self.current_project].delete_layer(layer_id)
 
     def send_history(self, history):
         self.projects[self.current_project].add_history(history)
@@ -116,6 +120,12 @@ class Project():
             "widget": self.preview,
             "id": self.id
         })
+
+    def delete_layer(self, layer_name):
+        self.layers.remove(self.layers[self.preview.choosenlayer])
+        self.preview.choosenlayer = 0
+        self.bus.layers_update_from_core.emit(self.layers)
+        self.preview.update()
 
     def add_layer(self, image, name):
         now = datetime.now()

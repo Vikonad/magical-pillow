@@ -30,7 +30,8 @@ class LayersWidget(QWidget):
         down_button = QPushButton()
         buttons1.addWidget(down_button)
 
-        delete_layer = QPushButton()
+        delete_layer = QPushButton("Delete layer")
+        delete_layer.clicked.connect(lambda: self.bus.delete_layer.emit("delete_layer"))
         buttons1.addWidget(delete_layer)
 
         bottom_buttons.addLayout(buttons1)

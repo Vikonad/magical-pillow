@@ -19,7 +19,7 @@ class SignalBus(QObject):
     toolbox_update = Signal(list)
     pen_update = Signal(QPen)
     close_project = Signal(int)
-
+    delete_layer = Signal(str)
     send_history = Signal(dict)
     update_history = Signal(dict)
 
