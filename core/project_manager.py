@@ -123,7 +123,7 @@ class Project():
 
     def delete_layer(self, layer_name):
         self.layers.remove(self.layers[self.preview.choosenlayer])
-        self.preview.choosenlayer = 0
+        self.preview.choosenlayer = len(self.layers)-1
         self.bus.layers_update_from_core.emit(self.layers)
         self.preview.update()
 
