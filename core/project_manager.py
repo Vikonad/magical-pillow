@@ -151,7 +151,7 @@ class Project():
         now = datetime.now()
         canvas = QImage(self.resolution["x"],self.resolution["y"] , QImage.Format_ARGB32)
         canvas.fill(QColor("white"))
-        layer = Layer("canavs", canvas)
+        layer = Layer("canvas", canvas)
         self.layers.append(layer)
         self.add_history({
             "title": "add canvas",
