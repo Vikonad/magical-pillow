@@ -38,7 +38,7 @@ class ImageViewer(QWidget):
         self.pen = pen
 
     def on_show_drawing_tab(self, tab):
-        if tab == "drawing":
+        if tab == "Drawing":
             self.drawing_mode = True
         #for i in self.theline:
             #    painter = QPainter(self.layers[self.choosenlayer])
@@ -48,7 +48,7 @@ class ImageViewer(QWidget):
             #    self.update()
 
     def on_hide_drawing_tab(self, tab):
-        if tab == "drawing":
+        if tab == "Drawing":
             self.drawing_mode = False
 
     def update_choosenlayer(self, index):

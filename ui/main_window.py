@@ -27,10 +27,10 @@ class MainWindow(QMainWindow):
         }
 
         self.widgets = {
-            "drawing": PenSettings(),
-            "text": TextSettings(),
-            "filters": Filters(),
-            "effects": Effects()
+            "Drawing": PenSettings(),
+            "Text": TextSettings(),
+            "Filters": Filters(),
+            "Effects": Effects()
         }
 
         # left widget
@@ -65,7 +65,7 @@ class MainWindow(QMainWindow):
         """)
         self.toolbox_layout.addWidget(self.tab_widgets["bottom_left_layout"])
 
-        self.tab_widgets["left_widget"].addTab(self.toolbox_widget, "tools")
+        self.tab_widgets["left_widget"].addTab(self.toolbox_widget, "Tools")
         self.tab_widgets["left_widget"].addTab(QWidget(), "AI")
 
         layout.addWidget(self.tab_widgets["left_widget"])
@@ -76,7 +76,6 @@ class MainWindow(QMainWindow):
         #self.middle_widget.setLayout(self.middle_layout)
 
         self.tab_widgets["bottom_middle_widget"] = QTabWidget()
-        self.tab_widgets["bottom_middle_widget"].addTab(QWidget(), "Animation")
         self.project_tabs = QTabWidget()
         self.project_tabs.setTabsClosable(True)
         self.project_tabs.setMovable(True)
@@ -112,7 +111,6 @@ class MainWindow(QMainWindow):
 
         open_action = QAction("Open", self)
         open_action.triggered.connect(lambda: self.bus.open_image_request.emit("open"))
-        #new_action.triggered.connect(print)
         file_menu.addAction(new_action)
         file_menu.addAction(open_action)
 
@@ -148,7 +146,6 @@ class MainWindow(QMainWindow):
         self.bus.show_tab.emit(tab)
 
     def show_project(self,project):
-        print(project["id"])
         project["widget"].setProperty("project_id", project["id"])
         self.project_tabs.addTab(project["widget"], project["name"])
         self.project_tabs.setCurrentWidget(project["widget"])

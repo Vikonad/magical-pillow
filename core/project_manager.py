@@ -90,10 +90,10 @@ class Project():
 
         self.layers = []
         self.ui_configuration = {
-            "drawing": False,
-            "text": False,
-            "filters": False,
-            "effects": False
+            "Drawing": False,
+            "Text": False,
+            "Filters": False,
+            "Effects": False
         }
         self.preview = ImageViewer(self.layers)
         self.name = name
