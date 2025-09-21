@@ -3,7 +3,7 @@ from PIL import Image, ImageEnhance
 
 from PySide6.QtWidgets import (
     QStackedLayout, QWidget, QVBoxLayout, QTabWidget, QPushButton, QScrollArea,
-    QGroupBox, QGridLayout, QSizePolicy, QLabel, QCheckBox
+    QGroupBox, QGridLayout, QSizePolicy, QLabel, QCheckBox, QSlider
 )
 from PySide6.QtCore import Qt
 
@@ -71,24 +71,43 @@ class Brightness(QWidget):
         super().__init__()
         self.project_manager = ProjectManager()
         layout = QVBoxLayout()
+
         self.title = QLabel("Brightness")
         self.title.setStyleSheet('font-size: 20px; font-weight: bold;')
         layout.addWidget(self.title)
+
+        self.slider = QSlider(Qt.Horizontal)
+        self.slider.setMinimum(int(0.0 * int(1 / 0.1)))
+        self.slider.setMaximum(int(2.0 * int(1 / 0.1)))
+        self.slider.setSingleStep(1)
+        self.slider.setValue(int(1.0 * int(1 / 0.1)))
+        self.slider.valueChanged.connect(self.update_label)
+        layout.addWidget(self.slider)
+
+        self.label = QLabel()
+        self.update_label(self.slider.value())
+        layout.addWidget(self.label)
+
         btn = QPushButton("Confirm")
         btn.pressed.connect(self.apply_filter)
         layout.addWidget(btn)
+
         preview = QCheckBox("preview")
-        preview.setChecked(True)
+        preview.setChecked(False)
         preview.stateChanged.connect(lambda state: self.bus.preview_filter(state))
         layout.addWidget(preview)
         self.setLayout(layout)
+
+    def update_label(self, value):
+        float_val = value / int(1 / 0.1)
+        self.label.setText(f"Value: {float_val:.1f}")
 
     def apply_filter(self):
         image = self.project_manager.get_current_layer()
         image_index = self.project_manager.get_current_layer_index()
         pil_img = qimage_to_pil(image)
         enhancer = ImageEnhance.Brightness(pil_img)
-        pil_img = enhancer.enhance(1.5)
+        pil_img = enhancer.enhance(self.slider.value()/10)
         self.project_manager.projects[self.project_manager.current_project].layers[image_index].image = pil_to_qimage(pil_img)
         self.project_manager.projects[self.project_manager.current_project].image.update()
 
