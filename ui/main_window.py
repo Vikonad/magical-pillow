@@ -2,7 +2,7 @@ from PySide6.QtWidgets import QMainWindow, QSplitter, QVBoxLayout, QWidget, QTab
 from PySide6.QtGui import QAction
 from PySide6.QtCore import Qt
 
-from ui import PenSettings, LayersWidget, HistoryWidget, ToolboxWidget, TextSettings
+from ui import PenSettings, LayersWidget, HistoryWidget, ToolboxWidget, TextSettings, ProjectTabs
 from ui.tools.filters import Filters
 from ui.tools.effects import Effects
 
@@ -13,7 +13,6 @@ class MainWindow(QMainWindow):
         super().__init__()
         self.bus = signal_bus
         self.projects = []
-        self.bus.addTab_project.connect(self.show_project)
         self.setWindowTitle("Magical Pillow [DEBUG]")
         #self.setMinimumSize(1120, 720)
 
@@ -76,11 +75,7 @@ class MainWindow(QMainWindow):
         #self.middle_widget.setLayout(self.middle_layout)
 
         self.tab_widgets["bottom_middle_widget"] = QTabWidget()
-        self.project_tabs = QTabWidget()
-        self.project_tabs.setTabsClosable(True)
-        self.project_tabs.setMovable(True)
-        self.project_tabs.currentChanged.connect(self.on_tab_changed)
-        self.project_tabs.tabCloseRequested.connect(self.close_tab)
+        self.project_tabs = ProjectTabs()
         self.middle_layout.addWidget(self.project_tabs)
         self.middle_layout.addWidget(self.tab_widgets["bottom_middle_widget"])
 
@@ -144,16 +139,3 @@ class MainWindow(QMainWindow):
                 self.tab_widgets[tab_widget].indexOf(self.widgets[tab])
             )
         self.bus.show_tab.emit(tab)
-
-    def show_project(self,project):
-        project["widget"].setProperty("project_id", project["id"])
-        self.project_tabs.addTab(project["widget"], project["name"])
-        self.project_tabs.setCurrentWidget(project["widget"])
-
-    def close_tab(self, index):
-        self.bus.close_project.emit(self.project_tabs.widget(index).property("project_id"))
-        self.project_tabs.removeTab(index)
-
-    def on_tab_changed(self, index):
-        if index != -1:
-            self.bus.project_tab_switched.emit(self.project_tabs.widget(index).property("project_id"))

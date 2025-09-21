@@ -1,4 +1,5 @@
 from .tools.pen_settings import PenSettings
+from .project_tabs import ProjectTabs
 from .tools.text_settings import TextSettings
 from .tools.filters import Filters
 from .tools.effects import Effects
