@@ -4,7 +4,7 @@ from PySide6.QtWidgets import QApplication, QFileDialog
 from PySide6.QtCore import Signal, Qt
 from PySide6.QtGui import QIcon
 
-from core import ProjectManager, SignalBus
+from core import ProjectManager, signal_bus
 from ui import MainWindow, StarterWindow
 from ui.new_project_window.new_project_window import NewProjectWindow
 
@@ -14,7 +14,7 @@ def load_theme(app):
 
 def main():
     project_manager = ProjectManager()
-    bus = SignalBus()
+    bus = signal_bus
     app = QApplication(sys.argv)
     app.setWindowIcon(QIcon("icon.png"))
     #load_theme(app)

@@ -1,24 +1,26 @@
 from PySide6.QtCore import QObject, Signal
 from PySide6.QtGui import QColor, QPen, QImage, Qt
-from core import SignalBus
-from ui.preview import ImageViewer
+from PySide6.QtWidgets import QVBoxLayout, QWidget
+
+from core import signal_bus, ImageViewer, Preview
 from datetime import datetime
 
-class ProjectManager():
+class ProjectManager:
     _instance = None
-    _initialized = False
 
     def __new__(cls, *args, **kwargs):
         if cls._instance is None:
-            cls._instance = super(ProjectManager, cls).__new__(cls)
+            cls._instance = super().__new__(cls)
+            cls._instance._initialized = False
         return cls._instance
 
     def __init__(self):
+        if self._initialized:
+            return  # skip re-initialization
+        self._initialized = True
+
         self._next_id = 1
-        self.bus = SignalBus()
-        if not self._initialized:
-            super().__init__()
-            ProjectManager._initialized = True
+        self.bus = signal_bus
         self.projects = {}
         self.current_project = 0
 
@@ -31,6 +33,14 @@ class ProjectManager():
         self.bus.close_project.connect(self.close_project)
         self.bus.send_history.connect(self.send_history)
         self.bus.delete_layer.connect(self.delete_layer)
+
+    def get_current_layer_index(self):
+        layer_index = self.projects[self.current_project].image.choosenlayer
+        return layer_index
+
+    def get_current_layer(self):
+        image = self.projects[self.current_project].layers[self.get_current_layer_index()].image
+        return image
 
     def delete_layer(self, layer_id):
         self.projects[self.current_project].delete_layer(layer_id)
@@ -83,7 +93,7 @@ class ProjectManager():
 
 class Project():
     def __init__(self, name, id):
-        self.bus = SignalBus()
+        self.bus = signal_bus
         self.id = id
         self.branches = {"master": []}
         self.choosenbranch = "master"
@@ -95,7 +105,8 @@ class Project():
             "Filters": False,
             "Effects": False
         }
-        self.preview = ImageViewer(self.layers)
+        self.image = ImageViewer(self.layers)
+        self.preview = Preview()
         self.name = name
         self.resolution = {}
 
@@ -105,8 +116,8 @@ class Project():
 
     def update_layers(self, new_order):
         self.layers[:] = sorted(self.layers, key=lambda layer: new_order[0].index(layer.name))
-        self.preview.choosenlayer = next(i for i, layer in enumerate(self.layers) if layer.name == new_order[1])
-        self.preview.update()
+        self.image.choosenlayer = next(i for i, layer in enumerate(self.layers) if layer.name == new_order[1])
+        self.image.update()
 
     def set_resolution(self, x, y):
         self.resolution = {
@@ -117,15 +128,16 @@ class Project():
     def show_project(self):
         self.bus.addTab_project.emit({
             "name": self.name,
-            "widget": self.preview,
+            "widget": self.image,
+            "preview": self.preview,
             "id": self.id
         })
 
     def delete_layer(self, layer_name):
-        self.layers.remove(self.layers[self.preview.choosenlayer])
-        self.preview.choosenlayer = len(self.layers)-1
+        self.layers.remove(self.layers[self.image.choosenlayer])
+        self.image.choosenlayer = len(self.layers)-1
         self.bus.layers_update_from_core.emit(self.layers)
-        self.preview.update()
+        self.image.update()
 
     def add_layer(self, image, name):
         now = datetime.now()
@@ -135,7 +147,7 @@ class Project():
             self.add_canvas()
         self.layers.append(layer)
         self.bus.layers_update_from_core.emit(self.layers)
-        self.preview.choosenlayer = len(self.layers)-1
+        self.image.choosenlayer = len(self.layers)-1
         self.add_history({
             "title": "add layer",
             "parameters": {
@@ -145,7 +157,7 @@ class Project():
             "date": now.strftime("%H:%M"),
             "layer": name
         })
-        self.preview.update()
+        self.image.update()
 
     def add_canvas(self):
         now = datetime.now()

@@ -4,7 +4,7 @@ from PySide6.QtWidgets import (
 )
 from PySide6.QtCore import Qt, Signal
 from PySide6.QtGui import QImage
-from core import SignalBus
+from core import signal_bus
 
 from random import randrange
 
@@ -12,7 +12,7 @@ class ToolboxWidget(QWidget):
     def __init__(self):
         super().__init__()
         #self.setFixedWidth(100)
-        self.bus = SignalBus()
+        self.bus = signal_bus
         self.bus.update_ui_configuration.connect(self.update_ui_configuration)
         layout = QVBoxLayout()
 

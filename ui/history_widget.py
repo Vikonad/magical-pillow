@@ -4,13 +4,13 @@ from PySide6.QtWidgets import (
 from PySide6.QtCore import Qt
 from PySide6.QtGui import QImage
 
-from core import SignalBus
+from core import signal_bus
 from ui import CircleCanvas
 
 class HistoryWidget(QWidget):
     def __init__(self):
         super().__init__()
-        self.bus = SignalBus()
+        self.bus = signal_bus
         self.bus.update_history.connect(self.add_history)
         layout = QVBoxLayout()
         self.title = QLabel("History")

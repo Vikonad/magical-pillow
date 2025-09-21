@@ -2,7 +2,7 @@ from PySide6.QtWidgets import QWidget, QVBoxLayout, QLabel, QLineEdit, QComboBox
 from PySide6.QtGui import QImage, QPainter, QPen, QBrush, QColor, QFont, QFontMetrics
 from PySide6.QtCore import Signal, Qt, QPoint
 
-from core import *
+from core import signal_bus
 from .display import Display
 from .photography import Photography
 from .printing import Printing
@@ -51,7 +51,7 @@ class NewProjectWindow(QWidget):
         self.setLayout(layout)
 
     def _emit_create(self, project_data):
-        SignalBus().new_project.emit({
+        signal_bus.new_project.emit({
             "name":project_data["name"],
             "image":self.create_image(project_data["resolution"]),
             "resolution":project_data["resolution"]

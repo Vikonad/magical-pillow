@@ -2,16 +2,16 @@ from PySide6.QtWidgets import QMainWindow, QSplitter, QVBoxLayout, QWidget, QTab
 from PySide6.QtGui import QAction
 from PySide6.QtCore import Qt
 
-from ui import PenSettings, LayersWidget, HistoryWidget, ToolboxWidget, ImageViewer, TextSettings
+from ui import PenSettings, LayersWidget, HistoryWidget, ToolboxWidget, TextSettings
 from ui.tools.filters import Filters
 from ui.tools.effects import Effects
 
-from core import SignalBus
+from core import signal_bus
 
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
-        self.bus = SignalBus()
+        self.bus = signal_bus
         self.projects = []
         self.bus.addTab_project.connect(self.show_project)
         self.setWindowTitle("Magical Pillow [DEBUG]")

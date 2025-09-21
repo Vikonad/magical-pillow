@@ -1,22 +1,31 @@
+import numpy as np
+from PIL import Image, ImageEnhance
+
 from PySide6.QtWidgets import (
-    QWidget, QVBoxLayout, QTabWidget, QPushButton, QScrollArea,
-    QGroupBox, QGridLayout, QSizePolicy
+    QStackedLayout, QWidget, QVBoxLayout, QTabWidget, QPushButton, QScrollArea,
+    QGroupBox, QGridLayout, QSizePolicy, QLabel, QCheckBox
 )
-from PySide6.QtCore import Qt, Signal
+from PySide6.QtCore import Qt
+
+from core import signal_bus, ProjectManager
+from utils import qimage_to_numpy, numpy_to_qimage, pil_to_qimage, qimage_to_pil
 
 class Filters(QWidget):
-    filter_selected = Signal(str)
-    effect_selected = Signal(str)
-
     def __init__(self, parent=None):
         super().__init__(parent)
+        self.project_manager = ProjectManager()
+        self.bus = signal_bus
         layout = QVBoxLayout(self)
         layout.setSpacing(0)
         layout.setContentsMargins(0,0,0,0)
-        layout.addWidget(self._create_filters_tab())
-        #layout.addWidget(self._create_effects_tab())
-
+        self.selected_filter_layout = QStackedLayout()
+        layout.addLayout(self.selected_filter_layout, 0)
+        layout.addWidget(self._create_filters_tab(), 1)
         self.setLayout(layout)
+
+        self.filters = [Brightness(), Contrast()]
+        for filter in self.filters:
+            self.selected_filter_layout.addWidget(filter)
 
     def _create_filters_tab(self):
         categories = {
@@ -29,22 +38,26 @@ class Filters(QWidget):
             "Morphological Filters": ["Erosion", "Dilation", "Opening", "Closing", "Edge thinning", "Skeletonization"],
             "Artistic Color Filters": ["“Vintage” tone", "Warm tone", "Cold tone", "Instagram-like filters", "Cinematic teal-orange", "Cross-processing"]
         }
-        return self._make_scrollable_buttons(categories, self.filter_selected)
+        return self._make_scrollable_buttons(categories)
 
-    def _make_scrollable_buttons(self, categories, signal):
+    def _make_scrollable_buttons(self, categories):
         scroll = QScrollArea()
         scroll.setWidgetResizable(True)
         container = QWidget()
         container_layout = QVBoxLayout()
 
+        item_count = 0
         for category, items in categories.items():
             group = QGroupBox(category)
             grid = QVBoxLayout()
             for i, name in enumerate(items):
                 btn = QPushButton(name)
                 btn.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Fixed)
-                btn.clicked.connect(lambda checked, n=name: signal.emit(n))
-                grid.addWidget(btn)  # 2 buttons per row
+                #btn.clicked.connect(lambda checked, n=name: self.bus.filter_selected.emit(n))
+                btn.clicked.connect(lambda checked, n=item_count: self.selected_filter_layout.setCurrentIndex(n))
+                #btn.clicked.connect(lambda checked, n=item_count: print(self.project_manager.current_project))
+                grid.addWidget(btn)
+                item_count += 1
             group.setLayout(grid)
             container_layout.addWidget(group)
 
@@ -52,3 +65,37 @@ class Filters(QWidget):
         container.setLayout(container_layout)
         scroll.setWidget(container)
         return scroll
+
+class Brightness(QWidget):
+    def __init__(self):
+        super().__init__()
+        self.project_manager = ProjectManager()
+        layout = QVBoxLayout()
+        self.title = QLabel("Brightness")
+        self.title.setStyleSheet('font-size: 20px; font-weight: bold;')
+        layout.addWidget(self.title)
+        btn = QPushButton("Confirm")
+        btn.pressed.connect(self.apply_filter)
+        layout.addWidget(btn)
+        preview = QCheckBox("preview")
+        preview.setChecked(True)
+        preview.stateChanged.connect(lambda state: self.bus.preview_filter(state))
+        layout.addWidget(preview)
+        self.setLayout(layout)
+
+    def apply_filter(self):
+        image = self.project_manager.get_current_layer()
+        image_index = self.project_manager.get_current_layer_index()
+        pil_img = qimage_to_pil(image)
+        enhancer = ImageEnhance.Brightness(pil_img)
+        pil_img = enhancer.enhance(1.5)
+        self.project_manager.projects[self.project_manager.current_project].layers[image_index].image = pil_to_qimage(pil_img)
+        self.project_manager.projects[self.project_manager.current_project].image.update()
+
+class Contrast(QWidget):
+    def __init__(self):
+        super().__init__()
+        layout = QVBoxLayout()
+        btn = QPushButton("contrast")
+        layout.addWidget(btn)
+        self.setLayout(layout)

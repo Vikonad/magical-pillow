@@ -4,12 +4,12 @@ from PySide6.QtWidgets import (
 from PySide6.QtCore import Qt
 from PySide6.QtGui import QImage, QPixmap, QPainter, QColor
 
-from core import SignalBus
+from core import signal_bus
 
 class LayersWidget(QWidget):
     def __init__(self):
         super().__init__()
-        self.bus = SignalBus()
+        self.bus = signal_bus
         self.bus.layers_update_from_core.connect(self.update_layers)
         layout = QVBoxLayout()
         self.title = QLabel("Layers")

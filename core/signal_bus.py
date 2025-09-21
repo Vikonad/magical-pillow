@@ -3,8 +3,8 @@ from PySide6.QtGui import QPen
 
 class SignalBus(QObject):
     _instance = None
-    _initialized = False
 
+    # all signals are defined at the class level
     new_project = Signal(dict)
     open_image_request = Signal(str)
     open_image = Signal(str)
@@ -23,12 +23,21 @@ class SignalBus(QObject):
     send_history = Signal(dict)
     update_history = Signal(dict)
 
+    filter_selected = Signal(str)
+    effect_selected = Signal(str)
+
     def __new__(cls, *args, **kwargs):
         if cls._instance is None:
-            cls._instance = super(SignalBus, cls).__new__(cls)
+            cls._instance = super().__new__(cls)
+            cls._instance._initialized = False
         return cls._instance
 
     def __init__(self):
-        if not self._initialized:
-            super().__init__()
-            SignalBus._initialized = True
+        if self._initialized:
+            return
+        super().__init__()
+        self._initialized = True
+
+        #self.project_tab_switched.connect(print)
+
+signal_bus = SignalBus()

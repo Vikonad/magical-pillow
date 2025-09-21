@@ -5,12 +5,12 @@ from PySide6.QtWidgets import (
 from PySide6.QtGui import QPen
 from PySide6.QtCore import Qt
 
-from core import SignalBus
+from core import signal_bus
 
 class PenSettings(QWidget):
     def __init__(self, parent=None):
         super().__init__(parent)
-        self.bus = SignalBus()
+        self.bus = signal_bus
         self._pen = QPen()
         layout = QVBoxLayout(self)
         self.title = QLabel("Drawing")

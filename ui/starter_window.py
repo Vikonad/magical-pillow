@@ -1,7 +1,7 @@
 from PySide6.QtWidgets import QWidget, QVBoxLayout, QPushButton, QLabel
 from PySide6.QtCore import Signal, Qt
 
-from core import SignalBus
+from core import signal_bus
 
 class StarterWindow(QWidget):
     def __init__(self):
@@ -9,7 +9,7 @@ class StarterWindow(QWidget):
         self.setWindowTitle("Vikonad's Magical Pillow")
         self.setFixedSize(400,350)
         self._init_ui()
-        self.bus = SignalBus()
+        self.bus = signal_bus
 
     def _init_ui(self):
         layout = QVBoxLayout()
