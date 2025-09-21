@@ -19,6 +19,7 @@ class Project():
         }
         self.image = ImageViewer(self.layers)
         self.preview = Preview()
+        self.preview.hide()
         self.name = name
         self.resolution = {}
 
@@ -40,7 +41,7 @@ class Project():
     def show_project(self):
         self.bus.addTab_project.emit({
             "name": self.name,
-            "widget": self.image,
+            "image": self.image,
             "preview": self.preview,
             "id": self.id
         })

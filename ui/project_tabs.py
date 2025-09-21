@@ -18,9 +18,15 @@ class ProjectTabs(QTabWidget):
         self.tabCloseRequested.connect(self.close_tab)
 
     def show_project(self,project):
-        project["widget"].setProperty("project_id", project["id"])
-        self.addTab(project["widget"], project["name"])
-        self.setCurrentWidget(project["widget"])
+        container = QWidget()
+        layout = QVBoxLayout(container)
+        image = project["image"]
+        preview = project["preview"]
+        layout.addWidget(image)
+        layout.addWidget(preview)
+        container.setProperty("project_id", project["id"])
+        self.addTab(container, project["name"])
+        self.setCurrentWidget(container)
 
     def close_tab(self, index):
         self.project_manager.close_project(self.widget(index).property("project_id"))

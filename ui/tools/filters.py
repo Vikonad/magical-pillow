@@ -69,6 +69,7 @@ class Filters(QWidget):
 class Brightness(QWidget):
     def __init__(self):
         super().__init__()
+        self.bus = signal_bus
         self.project_manager = ProjectManager()
         layout = QVBoxLayout()
 
@@ -94,7 +95,7 @@ class Brightness(QWidget):
 
         preview = QCheckBox("preview")
         preview.setChecked(False)
-        preview.stateChanged.connect(lambda state: self.bus.preview_filter(state))
+        preview.stateChanged.connect(lambda state: self.project_manager.preview_mode(state))
         layout.addWidget(preview)
         self.setLayout(layout)
 

@@ -21,9 +21,6 @@ class SignalBus(QObject):
     send_history = Signal(dict)
     update_history = Signal(dict)
 
-    filter_selected = Signal(str)
-    effect_selected = Signal(str)
-
     def __new__(cls, *args, **kwargs):
         if cls._instance is None:
             cls._instance = super().__new__(cls)

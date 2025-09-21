@@ -88,3 +88,11 @@ class ProjectManager:
             name = f"Layer {len(self.projects[self.current_project].layers)}"
             image.fill(Qt.transparent)
             self.projects[self.current_project].add_layer(image, name)
+
+    def preview_mode(self, arg):
+        if arg:
+            self.projects[self.current_project].image.hide()
+            self.projects[self.current_project].preview.show()
+        else:
+            self.projects[self.current_project].image.show()
+            self.projects[self.current_project].preview.hide()
