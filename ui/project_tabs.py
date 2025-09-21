@@ -23,9 +23,9 @@ class ProjectTabs(QTabWidget):
         self.setCurrentWidget(project["widget"])
 
     def close_tab(self, index):
-        self.bus.close_project.emit(self.widget(index).property("project_id"))
+        self.project_manager.close_project(self.widget(index).property("project_id"))
         self.removeTab(index)
 
     def on_tab_changed(self, index):
         if index != -1:
-            self.bus.project_tab_switched.emit(self.widget(index).property("project_id"))
+            self.project_manager.on_tab_switched(self.widget(index).property("project_id"))

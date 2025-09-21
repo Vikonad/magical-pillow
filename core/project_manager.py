@@ -27,10 +27,8 @@ class ProjectManager:
         self.bus.new_project.connect(self.create_new_project)
         self.bus.open_image.connect(self.open_image)
         self.bus.layers_update_from_ui.connect(self.on_layer_update)
-        self.bus.project_tab_switched.connect(self.on_tab_switched)
         self.bus.toolbox_update.connect(self.on_toolbox_update)
         self.bus.add_layer.connect(self.add_layer_to_project)
-        self.bus.close_project.connect(self.close_project)
         self.bus.send_history.connect(self.send_history)
         self.bus.delete_layer.connect(self.delete_layer)
 
@@ -43,7 +41,8 @@ class ProjectManager:
         return image
 
     def delete_layer(self, layer_id):
-        self.projects[self.current_project].delete_layer(layer_id)
+        if len(self.projects) >= 1:
+            self.projects[self.current_project].delete_layer(layer_id)
 
     def send_history(self, history):
         self.projects[self.current_project].add_history(history)
