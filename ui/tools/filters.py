@@ -19,10 +19,15 @@ class Filters(QWidget):
         layout = QVBoxLayout(self)
         layout.setSpacing(0)
         layout.setContentsMargins(0,0,0,0)
-        self.selected_filter_layout = QStackedLayout()
-        layout.addLayout(self.selected_filter_layout, 0)
+        self.container = QWidget()
+        self.selected_filter_layout = QStackedLayout(self.container)
+        self.container.hide()
+        layout.addWidget(self.container, 0)
         layout.addWidget(self._create_filters_tab(), 1)
         self.setLayout(layout)
+
+        empty_layout = QWidget()
+        self.selected_filter_layout.addWidget(empty_layout)
 
         self.filters = [Brightness(), Contrast()]
         for filter in self.filters:
@@ -55,7 +60,7 @@ class Filters(QWidget):
                 btn = QPushButton(name)
                 btn.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Fixed)
                 #btn.clicked.connect(lambda checked, n=name: self.bus.filter_selected.emit(n))
-                btn.clicked.connect(lambda checked, n=item_count: self.selected_filter_layout.setCurrentIndex(n))
+                btn.clicked.connect(lambda checked, n=item_count: self.select_filter(n))
                 #btn.clicked.connect(lambda checked, n=item_count: print(self.project_manager.current_project))
                 grid.addWidget(btn)
                 item_count += 1
@@ -66,6 +71,10 @@ class Filters(QWidget):
         container.setLayout(container_layout)
         scroll.setWidget(container)
         return scroll
+
+    def select_filter(self, n):
+        self.container.show()
+        self.selected_filter_layout.setCurrentIndex(n-1)
 
 class Brightness(QWidget):
     def __init__(self):
