@@ -34,5 +34,5 @@ class Preview(QWidget):
         super().resizeEvent(event)
 
     def set_image(self, image):
-        self.image = QImage(image)
+        self.image = image
         self.resizeEvent(None)  # force refresh

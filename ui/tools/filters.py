@@ -5,6 +5,7 @@ from PySide6.QtWidgets import (
     QStackedLayout, QWidget, QVBoxLayout, QTabWidget, QPushButton, QScrollArea,
     QGroupBox, QGridLayout, QSizePolicy, QLabel, QCheckBox, QSlider
 )
+from PySide6.QtGui import QImage
 from PySide6.QtCore import Qt
 
 from core import signal_bus, ProjectManager
@@ -109,17 +110,25 @@ class Brightness(QWidget):
 
     def preview_mode(self, state):
         image = self.project_manager.get_current_layer()
-        self.project_manager.projects[self.project_manager.current_project].preview.set_image(image)
+        self.apply_filter()
         self.project_manager.preview_mode(state)
+
+    def scale_qimage(self, image: QImage, factor: float) -> QImage:
+        new_width = int(image.width() * factor)
+        new_height = int(image.height() * factor)
+        return image.scaled(new_width, new_height, Qt.KeepAspectRatio, Qt.SmoothTransformation)
 
     def apply_filter(self):
         image = self.project_manager.get_current_layer()
+        image = self.scale_qimage(image, 0.1)
         image_index = self.project_manager.get_current_layer_index()
         pil_img = qimage_to_pil(image)
         enhancer = ImageEnhance.Brightness(pil_img)
         pil_img = enhancer.enhance(self.slider.value()/10)
-        self.project_manager.projects[self.project_manager.current_project].preview.set_image(pil_to_qimage(pil_img))
+        image = pil_to_qimage(pil_img)
+        self.project_manager.projects[self.project_manager.current_project].preview.set_image(image)
         #self.project_manager.projects[self.project_manager.current_project].preview.update()
+
 
     def confirm_filter(self):
         image = self.project_manager.get_current_layer()
