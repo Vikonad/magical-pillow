@@ -90,18 +90,27 @@ class Brightness(QWidget):
         layout.addWidget(self.label)
 
         btn = QPushButton("Confirm")
-        btn.pressed.connect(self.apply_filter)
+        btn.pressed.connect(self.confirm_filter)
         layout.addWidget(btn)
 
         preview = QCheckBox("preview")
         preview.setChecked(False)
-        preview.stateChanged.connect(lambda state: self.project_manager.preview_mode(state))
+        preview.stateChanged.connect(self.preview_mode)
         layout.addWidget(preview)
         self.setLayout(layout)
+
+        #self.preview = QImage()
 
     def update_label(self, value):
         float_val = value / int(1 / 0.1)
         self.label.setText(f"Value: {float_val:.1f}")
+        if len(self.project_manager.projects) != 0:
+            self.apply_filter()
+
+    def preview_mode(self, state):
+        image = self.project_manager.get_current_layer()
+        self.project_manager.projects[self.project_manager.current_project].preview.set_image(image)
+        self.project_manager.preview_mode(state)
 
     def apply_filter(self):
         image = self.project_manager.get_current_layer()
@@ -109,8 +118,19 @@ class Brightness(QWidget):
         pil_img = qimage_to_pil(image)
         enhancer = ImageEnhance.Brightness(pil_img)
         pil_img = enhancer.enhance(self.slider.value()/10)
-        self.project_manager.projects[self.project_manager.current_project].layers[image_index].image = pil_to_qimage(pil_img)
+        self.project_manager.projects[self.project_manager.current_project].preview.set_image(pil_to_qimage(pil_img))
+        #self.project_manager.projects[self.project_manager.current_project].preview.update()
+
+    def confirm_filter(self):
+        image = self.project_manager.get_current_layer()
+        image_index = self.project_manager.get_current_layer_index()
+        pil_img = qimage_to_pil(image)
+        enhancer = ImageEnhance.Brightness(pil_img)
+        pil_img = enhancer.enhance(self.slider.value()/10)
+        image = pil_to_qimage(pil_img)
+        self.project_manager.projects[self.project_manager.current_project].layers[image_index].image = image
         self.project_manager.projects[self.project_manager.current_project].image.update()
+        self.project_manager.projects[self.project_manager.current_project].preview.set_image(image)
 
 class Contrast(QWidget):
     def __init__(self):
