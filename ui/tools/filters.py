@@ -120,7 +120,7 @@ class Brightness(QWidget):
 
     def apply_filter(self):
         image = self.project_manager.get_current_layer()
-        image = self.scale_qimage(image, 0.1)
+        image = self.scale_qimage(image, 0.2)
         image_index = self.project_manager.get_current_layer_index()
         pil_img = qimage_to_pil(image)
         enhancer = ImageEnhance.Brightness(pil_img)
