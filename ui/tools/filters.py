@@ -129,7 +129,6 @@ class Brightness(QWidget):
         self.project_manager.projects[self.project_manager.current_project].preview.set_image(image)
         #self.project_manager.projects[self.project_manager.current_project].preview.update()
 
-
     def confirm_filter(self):
         image = self.project_manager.get_current_layer()
         image_index = self.project_manager.get_current_layer_index()
