@@ -15,10 +15,18 @@ class Project():
 
         self.layers = []
         self.ui_configuration = {
-            "Drawing": False,
-            "Text": False,
-            "Filters": False,
-            "Effects": False
+            "Drawing": {
+                "show": False
+            },
+            "Text": {
+                "show": False
+            },
+            "Filters": {
+                "show": False,
+            },
+            "Effects": {
+                "show": False
+            }
         }
         self.image = ImageViewer(self.layers)
         self.preview = Preview()

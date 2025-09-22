@@ -58,7 +58,7 @@ class ProjectManager:
 
     def on_toolbox_update(self, conf):
         if len(self.projects) >= 1:
-            self.projects[self.current_project].ui_configuration[conf[1][0]] = conf[0]
+            self.projects[self.current_project].ui_configuration[conf[1][0]]["show"] = conf[0]
 
     def on_tab_switched(self, tab):
         self.current_project = tab
