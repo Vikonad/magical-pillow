@@ -33,7 +33,6 @@ class MainWindow(QMainWindow):
         }
 
         # left widget
-        self.tab_widgets["left_widget"] = QTabWidget()
         self.tab_widgets["left_widget"].setMinimumWidth(250)
         self.tab_widgets["left_widget"].setMaximumWidth(250)
         self.toolbox_layout = QVBoxLayout()
