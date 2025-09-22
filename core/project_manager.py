@@ -31,8 +31,13 @@ class ProjectManager:
         self.bus.send_history.connect(self.send_history)
         self.bus.delete_layer.connect(self.delete_layer)
 
+        self.filters_cache = []
+
+    def get_current_project(self):
+        return self.projects[self.current_project]
+
     def get_current_layer_index(self):
-        layer_index = self.projects[self.current_project].image.choosenlayer
+        layer_index = self.get_current_project().image.choosenlayer
         return layer_index
 
     def get_current_layer(self):

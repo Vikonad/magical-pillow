@@ -5,6 +5,9 @@ from datetime import datetime
 
 class Project():
     def __init__(self, name, id):
+        self.filters_cache_ready = False
+        self.filters_cache = []
+
         self.bus = signal_bus
         self.id = id
         self.branches = {"master": []}

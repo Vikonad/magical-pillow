@@ -14,6 +14,7 @@ class BrightnessWorker(QThread):
         self.progressbar = progressbar
 
     def run(self):
+        self.progressbar.show()
         result = []
         for i in range(21):
             pil_img = qimage_to_pil(self.image)

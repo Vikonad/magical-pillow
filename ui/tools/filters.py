@@ -75,14 +75,11 @@ class Filters(QWidget):
     def select_filter(self, n):
         self.container.show()
         self.selected_filter_layout.setCurrentIndex(n+1)
-        self.filters[n].start()
 
 class Brightness(QWidget):
     def __init__(self):
         super().__init__()
         self.project_manager = ProjectManager()
-        self.on_finished = False
-        self.result = []
         self.bus = signal_bus
         layout = QVBoxLayout()
 
@@ -124,8 +121,8 @@ class Brightness(QWidget):
         self.brightness_worker.start()
 
     def _on_worker_finished(self, result):
-            self.on_finished = True
-            self.result = result
+            self.project_manager.get_current_project().filters_cache_ready = True
+            self.project_manager.get_current_project().filters_cache = result
             self.apply_filter()
             self.progress.hide()
 
@@ -138,6 +135,7 @@ class Brightness(QWidget):
     def preview_mode(self, state):
         self.apply_filter()
         self.project_manager.preview_mode(state)
+        if state: self.start()
 
     def scale_qimage(self, image: QImage, factor: float) -> QImage:
         new_width = int(image.width() * factor)
@@ -145,8 +143,8 @@ class Brightness(QWidget):
         return image.scaled(new_width, new_height, Qt.KeepAspectRatio, Qt.SmoothTransformation)
 
     def apply_filter(self):
-        if self.on_finished:
-            image = self.result[self.slider.value()]
+        if self.project_manager.get_current_project().filters_cache_ready:
+            image = self.project_manager.get_current_project().filters_cache[self.slider.value()]
         else:
             image = self.project_manager.get_current_layer()
             image = self.scale_qimage(image, 0.2)
@@ -154,7 +152,7 @@ class Brightness(QWidget):
             enhancer = ImageEnhance.Brightness(pil_img)
             pil_img = enhancer.enhance(self.slider.value()/10)
             image = pil_to_qimage(pil_img)
-        self.project_manager.projects[self.project_manager.current_project].preview.set_image(image)
+        self.project_manager.get_current_project().preview.set_image(image)
         #self.project_manager.projects[self.project_manager.current_project].preview.update()
 
     def confirm_filter(self):
@@ -164,9 +162,9 @@ class Brightness(QWidget):
         enhancer = ImageEnhance.Brightness(pil_img)
         pil_img = enhancer.enhance(self.slider.value()/10)
         image = pil_to_qimage(pil_img)
-        self.project_manager.projects[self.project_manager.current_project].layers[image_index].image = image
-        self.project_manager.projects[self.project_manager.current_project].image.update()
-        self.project_manager.projects[self.project_manager.current_project].preview.set_image(image)
+        self.project_manager.get_current_project().layers[image_index].image = image
+        self.project_manager.get_current_project().image.update()
+        self.project_manager.get_current_project().preview.set_image(image)
 
 class Contrast(QWidget):
     def __init__(self):
