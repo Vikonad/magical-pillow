@@ -3,12 +3,12 @@ from PIL import Image, ImageEnhance
 
 from PySide6.QtWidgets import (
     QStackedLayout, QWidget, QVBoxLayout, QTabWidget, QPushButton, QScrollArea,
-    QGroupBox, QGridLayout, QSizePolicy, QLabel, QCheckBox, QSlider
+    QGroupBox, QGridLayout, QSizePolicy, QLabel, QCheckBox, QSlider, QProgressBar
 )
 from PySide6.QtGui import QImage
 from PySide6.QtCore import Qt
 
-from core import signal_bus, ProjectManager
+from core import signal_bus, ProjectManager, BrightnessWorker
 from utils import qimage_to_numpy, numpy_to_qimage, pil_to_qimage, qimage_to_pil
 
 class Filters(QWidget):
@@ -74,13 +74,16 @@ class Filters(QWidget):
 
     def select_filter(self, n):
         self.container.show()
-        self.selected_filter_layout.setCurrentIndex(n-1)
+        self.selected_filter_layout.setCurrentIndex(n+1)
+        self.filters[n].start()
 
 class Brightness(QWidget):
     def __init__(self):
         super().__init__()
-        self.bus = signal_bus
         self.project_manager = ProjectManager()
+        self.on_finished = False
+        self.result = []
+        self.bus = signal_bus
         layout = QVBoxLayout()
 
         self.title = QLabel("Brightness")
@@ -109,16 +112,30 @@ class Brightness(QWidget):
         layout.addWidget(preview)
         self.setLayout(layout)
 
-        #self.preview = QImage()
+        self.progress = QProgressBar()
+        layout.addWidget(self.progress)
+
+    def start(self):
+        self.brightness_worker = BrightnessWorker(
+            self.project_manager.get_current_layer(),
+            self.progress
+        )
+        self.brightness_worker.finished.connect(self._on_worker_finished)
+        self.brightness_worker.start()
+
+    def _on_worker_finished(self, result):
+            self.on_finished = True
+            self.result = result
+            self.apply_filter()
+            self.progress.hide()
 
     def update_label(self, value):
-        float_val = value / int(1 / 0.1)
-        self.label.setText(f"Value: {float_val:.1f}")
         if len(self.project_manager.projects) != 0:
             self.apply_filter()
+        float_val = value / int(1 / 0.1)
+        self.label.setText(f"Value: {float_val:.1f}")
 
     def preview_mode(self, state):
-        image = self.project_manager.get_current_layer()
         self.apply_filter()
         self.project_manager.preview_mode(state)
 
@@ -128,13 +145,15 @@ class Brightness(QWidget):
         return image.scaled(new_width, new_height, Qt.KeepAspectRatio, Qt.SmoothTransformation)
 
     def apply_filter(self):
-        image = self.project_manager.get_current_layer()
-        image = self.scale_qimage(image, 0.2)
-        image_index = self.project_manager.get_current_layer_index()
-        pil_img = qimage_to_pil(image)
-        enhancer = ImageEnhance.Brightness(pil_img)
-        pil_img = enhancer.enhance(self.slider.value()/10)
-        image = pil_to_qimage(pil_img)
+        if self.on_finished:
+            image = self.result[self.slider.value()]
+        else:
+            image = self.project_manager.get_current_layer()
+            image = self.scale_qimage(image, 0.2)
+            pil_img = qimage_to_pil(image)
+            enhancer = ImageEnhance.Brightness(pil_img)
+            pil_img = enhancer.enhance(self.slider.value()/10)
+            image = pil_to_qimage(pil_img)
         self.project_manager.projects[self.project_manager.current_project].preview.set_image(image)
         #self.project_manager.projects[self.project_manager.current_project].preview.update()
 

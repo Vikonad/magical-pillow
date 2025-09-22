@@ -4,3 +4,5 @@ from .preview import Preview
 from .layer import Layer
 from .project import Project
 from .project_manager import ProjectManager
+
+from .filters import BrightnessWorker
