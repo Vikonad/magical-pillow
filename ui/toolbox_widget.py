@@ -74,7 +74,6 @@ class ToolboxWidget(QWidget):
         self.setLayout(layout)
 
     def update_ui_configuration(self, configuration):
-        print(configuration["Drawing"]["show"])
         self.bus.toolbox_update.emit([configuration["Drawing"]["show"],["Drawing","bottom_left_layout"]])
         self.drawing.setChecked(configuration["Drawing"]["show"])
         self.bus.toolbox_update.emit([configuration["Text"]["show"],["Text","bottom_middle_widget"]])

@@ -23,6 +23,8 @@ class Project():
             },
             "Filters": {
                 "show": False,
+                "selected-filter": -1,
+                "configurations": {}
             },
             "Effects": {
                 "show": False

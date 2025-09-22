@@ -16,6 +16,7 @@ class Filters(QWidget):
         super().__init__(parent)
         self.project_manager = ProjectManager()
         self.bus = signal_bus
+        self.bus.update_ui_configuration.connect(self.load_config)
         layout = QVBoxLayout(self)
         layout.setSpacing(0)
         layout.setContentsMargins(0,0,0,0)
@@ -72,15 +73,26 @@ class Filters(QWidget):
         scroll.setWidget(container)
         return scroll
 
+    def load_config(self, config):
+        #print(self.project_manager.get_current_project().ui_configuration["Filters"]["selected-filter"])
+        if config["Filters"]["selected-filter"] != -1:
+            self.select_filter(config["Filters"]["selected-filter"])
+        else:
+            self.container.hide()
+            self.selected_filter_layout.setCurrentIndex(0)
+
     def select_filter(self, n):
+        self.project_manager.get_current_project().ui_configuration["Filters"]["selected-filter"] = n
         self.container.show()
         self.selected_filter_layout.setCurrentIndex(n+1)
+        self.filters[n].load_config()
 
 class Brightness(QWidget):
     def __init__(self):
         super().__init__()
         self.project_manager = ProjectManager()
         self.bus = signal_bus
+        self.bus.update_ui_configuration.connect(self.load_config)
         layout = QVBoxLayout()
 
         self.title = QLabel("Brightness")
@@ -103,14 +115,23 @@ class Brightness(QWidget):
         btn.pressed.connect(self.confirm_filter)
         layout.addWidget(btn)
 
-        preview = QCheckBox("preview")
-        preview.setChecked(False)
-        preview.stateChanged.connect(self.preview_mode)
-        layout.addWidget(preview)
+        self.preview = QCheckBox("preview")
+        self.preview.setChecked(False)
+        self.preview.stateChanged.connect(self.preview_mode)
+        layout.addWidget(self.preview)
         self.setLayout(layout)
 
         self.progress = QProgressBar()
         layout.addWidget(self.progress)
+
+    def load_config(self):
+        configs = self.project_manager.get_current_project().ui_configuration["Filters"]["configurations"]
+        if configs:
+            self.slider.setValue(configs["value"])
+            self.preview.setChecked(configs["preview_mode"])
+        else:
+            configs["value"] = self.slider.value()
+            configs["preview_mode"] = False
 
     def start(self):
         self.brightness_worker = BrightnessWorker(
@@ -129,13 +150,15 @@ class Brightness(QWidget):
     def update_label(self, value):
         if len(self.project_manager.projects) != 0:
             self.apply_filter()
+            self.project_manager.get_current_project().ui_configuration["Filters"]["configurations"]["value"] = value
         float_val = value / int(1 / 0.1)
         self.label.setText(f"Value: {float_val:.1f}")
 
     def preview_mode(self, state):
         self.apply_filter()
         self.project_manager.preview_mode(state)
-        if state: self.start()
+        self.project_manager.get_current_project().ui_configuration["Filters"]["configurations"]["preview_mode"] = state
+        if state and not self.project_manager.get_current_project().filters_cache_ready: self.start()
 
     def scale_qimage(self, image: QImage, factor: float) -> QImage:
         new_width = int(image.width() * factor)
