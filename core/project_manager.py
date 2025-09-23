@@ -1,5 +1,5 @@
-from PySide6.QtCore import QObject, Signal
-from PySide6.QtGui import QColor, QPen, QImage, Qt
+from PySide6.QtCore import QObject, Signal, QSize
+from PySide6.QtGui import QColor, QPen, QImage, Qt, QPainter
 from PySide6.QtWidgets import QVBoxLayout, QWidget
 
 from core import signal_bus, ImageViewer, Preview, Project
@@ -32,6 +32,23 @@ class ProjectManager:
         self.bus.delete_layer.connect(self.delete_layer)
 
         self.filters_cache = []
+
+    def export_to_png(self):
+        layers = self.get_current_project().layers
+        if not layers:
+            return None
+
+        # Use the size of the first image as canvas size
+        width = layers[0].image.width()
+        height = layers[0].image.height()
+        result = QImage(QSize(width, height), QImage.Format_ARGB32)
+        result.fill(0)  # Transparent background
+
+        painter = QPainter(result)
+        for layer in layers:
+            painter.drawImage(0, 0, layer.image)  # Draw each layer at top-left corner
+        painter.end()
+        result.save("merged.jpg")
 
     def get_current_project(self):
         return self.projects[self.current_project]

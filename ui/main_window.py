@@ -6,11 +6,12 @@ from ui import PenSettings, LayersWidget, HistoryWidget, ToolboxWidget, TextSett
 from ui.tools.filters import Filters
 from ui.tools.effects import Effects
 
-from core import signal_bus
+from core import signal_bus, ProjectManager
 
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
+        self.project_manager = ProjectManager()
         self.bus = signal_bus
         self.projects = []
         self.setWindowTitle("Magical Pillow [DEBUG]")
@@ -93,7 +94,6 @@ class MainWindow(QMainWindow):
         self.right_widget.addTab(QWidget(), "Analysis")
         self.right_widget.addTab(QWidget(), "Utility")
 
-
         menu_bar = self.menuBar()
 
         # File Menu
@@ -102,11 +102,15 @@ class MainWindow(QMainWindow):
         # Add actions to File Menu
         new_action = QAction("New", self)
         new_action.triggered.connect(lambda: self.bus.open_image_request.emit("new"))
+        file_menu.addAction(new_action)
 
         open_action = QAction("Open", self)
         open_action.triggered.connect(lambda: self.bus.open_image_request.emit("open"))
-        file_menu.addAction(new_action)
         file_menu.addAction(open_action)
+
+        save_action = QAction("Export", self)
+        save_action.triggered.connect(lambda: self.project_manager.export_to_png())
+        file_menu.addAction(save_action)
 
         exit_action = QAction("Exit", self)
         exit_action.triggered.connect(self.close)
