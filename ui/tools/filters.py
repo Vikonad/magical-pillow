@@ -135,9 +135,10 @@ class Brightness(QWidget):
 
     def start(self):
         self.brightness_worker = BrightnessWorker(
-            self.project_manager.get_current_layer(),
-            self.progress
+            self.project_manager.get_current_layer().copy(),
         )
+        self.brightness_worker.progress.connect(self.progress.setValue)
+        self.progress.show()
         self.brightness_worker.finished.connect(self._on_worker_finished)
         self.brightness_worker.start()
 

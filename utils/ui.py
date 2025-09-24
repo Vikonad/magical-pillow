@@ -15,7 +15,7 @@ def clear_layout(layout):
                 clear_layout(sub_layout)
 
 def qimage_to_numpy(qimage: QImage) -> np.ndarray:
-    qimage = qimage.convertToFormat(QImage.Format.Format_RGBA8888)
+    qimage = qimage.convertToFormat(QImage.Format_ARGB32)
     width = qimage.width()
     height = qimage.height()
 
@@ -26,17 +26,17 @@ def qimage_to_numpy(qimage: QImage) -> np.ndarray:
 def numpy_to_qimage(arr: np.ndarray) -> QImage:
     height, width, channels = arr.shape
     bytes_per_line = channels * width
-    return QImage(arr.data, width, height, bytes_per_line, QImage.Format.Format_RGBA8888).copy()
+    return QImage(arr.data, width, height, bytes_per_line, QImage.Format_ARGB32).copy()
 
 def qimage_to_pil(qimage: QImage) -> Image.Image:
-    qimage = qimage.convertToFormat(QImage.Format.Format_RGBA8888)
+    qimage = qimage.convertToFormat(QImage.Format_ARGB32)
     width, height = qimage.width(), qimage.height()
     ptr = qimage.bits()
     arr = np.frombuffer(ptr[: qimage.sizeInBytes()], np.uint8).reshape((height, width, 4)).copy()
-    return Image.fromarray(arr, 'RGBA')
+    return Image.fromarray(arr, 'RGBA').copy()
 
 def pil_to_qimage(pil_img: Image.Image) -> QImage:
     arr = np.array(pil_img)
     height, width, channels = arr.shape
     bytes_per_line = channels * width
-    return QImage(arr.data, width, height, bytes_per_line, QImage.Format.Format_RGBA8888).copy()
+    return QImage(arr.data, width, height, bytes_per_line, QImage.Format_ARGB32).copy()
