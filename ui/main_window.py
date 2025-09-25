@@ -1,10 +1,8 @@
-from PySide6.QtWidgets import QMainWindow, QSplitter, QVBoxLayout, QWidget, QTabWidget, QStackedWidget
+from PySide6.QtWidgets import QMainWindow, QSplitter, QVBoxLayout, QWidget, QTabWidget
 from PySide6.QtGui import QAction
 from PySide6.QtCore import Qt
 
-from ui import PenSettings, LayersWidget, HistoryWidget, ToolboxWidget, TextSettings, ProjectTabs
-from ui.tools.filters import Filters
-from ui.tools.effects import Effects
+from ui import PenSettings, LayersWidget, HistoryWidget, ToolboxWidget, TextSettings, ProjectTabs, Filters, Effects
 
 from core import signal_bus, ProjectManager
 

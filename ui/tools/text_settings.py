@@ -1,10 +1,9 @@
 from PySide6.QtWidgets import (
-    QWidget, QVBoxLayout, QHBoxLayout, QLabel, QSpinBox, QColorDialog,QDialog,
-    QPushButton, QComboBox, QTextEdit, QDoubleSpinBox, QCheckBox, QFontComboBox, QScrollArea, QListWidget,
+    QWidget, QVBoxLayout, QHBoxLayout, QLabel, QColorDialog,
+    QPushButton, QComboBox, QTextEdit, QFontComboBox, QScrollArea, QListWidget,
     QListWidgetItem
 )
-from PySide6.QtGui import QPen, QFontDatabase,QFont, QTextCharFormat, QTextCursor, QColor
-from PySide6.QtCore import Qt
+from PySide6.QtGui import QFontDatabase, QFont, QTextCharFormat, QTextCursor
 
 class TextSettings(QWidget):
     def __init__(self):

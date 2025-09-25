@@ -1,15 +1,14 @@
-import numpy as np
-from PIL import Image, ImageEnhance
+from PIL import ImageEnhance
 
 from PySide6.QtWidgets import (
-    QStackedLayout, QWidget, QVBoxLayout, QTabWidget, QPushButton, QScrollArea,
-    QGroupBox, QGridLayout, QSizePolicy, QLabel, QCheckBox, QSlider, QProgressBar
+    QStackedLayout, QWidget, QVBoxLayout, QPushButton, QScrollArea,
+    QGroupBox,  QSizePolicy, QLabel, QCheckBox, QSlider, QProgressBar
 )
 from PySide6.QtGui import QImage
 from PySide6.QtCore import Qt
 
 from core import signal_bus, ProjectManager, BrightnessWorker
-from utils import qimage_to_numpy, numpy_to_qimage, pil_to_qimage, qimage_to_pil
+from utils import pil_to_qimage, qimage_to_pil
 
 class Filters(QWidget):
     def __init__(self, parent=None):

@@ -1,12 +1,7 @@
 from PySide6.QtWidgets import (
-    QGridLayout,
-    QApplication, QMainWindow, QPushButton, QSlider, QTextEdit, QDockWidget, QLabel, QListWidget, QVBoxLayout, QWidget, QHBoxLayout, QFrame, QListWidgetItem
+    QPushButton, QVBoxLayout, QWidget, QHBoxLayout
 )
-from PySide6.QtCore import Qt, Signal
-from PySide6.QtGui import QImage
 from core import signal_bus
-
-from random import randrange
 
 class ToolboxWidget(QWidget):
     def __init__(self):

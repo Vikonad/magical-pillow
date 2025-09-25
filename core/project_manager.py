@@ -1,8 +1,7 @@
-from PySide6.QtCore import QObject, Signal, QSize
-from PySide6.QtGui import QColor, QPen, QImage, Qt, QPainter
-from PySide6.QtWidgets import QVBoxLayout, QWidget
+from PySide6.QtCore import QSize
+from PySide6.QtGui import QImage, Qt, QPainter
 
-from core import signal_bus, ImageViewer, Preview, Project
+from core import signal_bus, Project
 
 class ProjectManager:
     _instance = None

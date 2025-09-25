@@ -1,7 +1,6 @@
 import sys, os
 
 from PySide6.QtWidgets import QApplication, QFileDialog
-from PySide6.QtCore import Signal, Qt
 from PySide6.QtGui import QIcon
 
 from core import ProjectManager, signal_bus

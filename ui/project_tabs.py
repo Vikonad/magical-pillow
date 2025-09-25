@@ -1,8 +1,6 @@
 from PySide6.QtWidgets import (
-    QApplication, QMainWindow, QPushButton, QSlider, QTextEdit, QDockWidget, QLabel, QListWidget, QVBoxLayout, QWidget, QHBoxLayout, QFrame, QListWidgetItem, QTabWidget
+    QTabWidget, QWidget, QVBoxLayout
 )
-from PySide6.QtCore import Qt
-from PySide6.QtGui import QImage
 
 from core import ProjectManager, signal_bus
 

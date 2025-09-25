@@ -1,8 +1,8 @@
 from PySide6.QtWidgets import (
-    QWidget, QVBoxLayout, QTabWidget, QPushButton, QScrollArea,
-    QGroupBox, QGridLayout, QSizePolicy
+    QWidget, QVBoxLayout, QPushButton, QScrollArea,
+    QGroupBox, QSizePolicy
 )
-from PySide6.QtCore import Qt, Signal
+from PySide6.QtCore import Signal
 
 class Effects(QWidget):
     filter_selected = Signal(str)

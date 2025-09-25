@@ -1,6 +1,6 @@
 from PySide6.QtWidgets import (
     QWidget, QVBoxLayout, QHBoxLayout, QLabel, QSpinBox, QColorDialog,
-    QPushButton, QComboBox, QLineEdit, QDoubleSpinBox, QCheckBox
+    QPushButton, QComboBox, QLineEdit, QDoubleSpinBox
 )
 from PySide6.QtGui import QPen
 from PySide6.QtCore import Qt

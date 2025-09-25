@@ -1,8 +1,6 @@
 from PySide6.QtWidgets import (
-    QApplication, QMainWindow, QPushButton, QSlider, QTextEdit, QDockWidget, QLabel, QListWidget, QVBoxLayout, QWidget, QHBoxLayout, QFrame, QListWidgetItem
+    QLabel, QListWidget, QVBoxLayout, QWidget, QHBoxLayout, QFrame, QListWidgetItem
 )
-from PySide6.QtCore import Qt
-from PySide6.QtGui import QImage
 
 from core import signal_bus
 from ui import CircleCanvas

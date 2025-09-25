@@ -1,5 +1,5 @@
 from PySide6.QtWidgets import QWidget, QVBoxLayout, QPushButton, QLabel
-from PySide6.QtCore import Signal, Qt
+from PySide6.QtCore import Qt
 
 from core import signal_bus
 

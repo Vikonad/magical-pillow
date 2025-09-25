@@ -1,6 +1,6 @@
 import sys
 import math
-from PySide6.QtWidgets import QApplication, QWidget
+from PySide6.QtWidgets import QWidget
 from PySide6.QtGui import QPainter, QBrush, QColor, QMouseEvent
 from PySide6.QtCore import QPointF, Qt
 

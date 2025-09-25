@@ -1,6 +1,5 @@
 import numpy as np
 from PySide6.QtGui import QImage
-from PIL import Image, ImageEnhance
 
 def clear_layout(layout):
     while layout.count():

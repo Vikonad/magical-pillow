@@ -1,5 +1,5 @@
 from PySide6.QtWidgets import QWidget
-from PySide6.QtGui import QImage, QPainter, QPen, QColor, QMouseEvent, QWheelEvent, QPainterPath
+from PySide6.QtGui import QPainter, QPen, QColor, QMouseEvent, QWheelEvent
 from PySide6.QtCore import Qt, QPointF
 
 import sys

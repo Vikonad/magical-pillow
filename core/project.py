@@ -1,4 +1,4 @@
-from PySide6.QtGui import QColor, QPen, QImage, Qt
+from PySide6.QtGui import QColor, QImage
 
 from core import signal_bus, ImageViewer, Preview, Layer
 from datetime import datetime
