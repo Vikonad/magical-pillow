@@ -1,2 +1,2 @@
 # magical-pillow
-image editing software made for developers
+yet another image editing software
